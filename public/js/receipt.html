@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Payment Receipt</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+
+/* ── PRINT STYLES ── */
+@media print {
+  body { background: #fff !important; }
+  header, .action-btns, .no-print { display: none !important; }
+  .page { padding: 0 !important; background: #fff !important; }
+  .receipt-card {
+    box-shadow: none !important; border: 1px solid #ddd !important;
+    max-width: 100% !important; border-radius: 0 !important;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  min-height: 100%;
+  font-family: 'DM Sans', sans-serif;
+  background: #f0f1ff;
+}
+
+/* ── HEADER ── */
+header {
+  position: fixed; top: 0; left: 0; right: 0; height: 58px;
+  background: #4a4de6; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800;
+  z-index: 100; box-shadow: 0 2px 20px rgba(74,77,230,0.3);
+}
+
+/* ── PAGE ── */
+.page {
+  padding: 80px 1.5rem 2rem;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 1.2rem;
+}
+
+/* ── RECEIPT CARD ── */
+.receipt-card {
+  width: 100%; max-width: 480px;
+  background: #fff; border-radius: 24px;
+  box-shadow: 0 10px 50px rgba(74,77,230,0.13), 0 2px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+/* ── SUCCESS BANNER ── */
+.receipt-top {
+  background: linear-gradient(135deg, #4a4de6, #7b5ea7);
+  padding: 2rem; text-align: center;
+}
+.success-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: rgba(255,255,255,0.22);
+  border: 2.5px solid rgba(255,255,255,0.45);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 2rem; margin-bottom: 0.8rem;
+}
+.receipt-top h2 {
+  font-family: 'Syne', sans-serif; font-size: 1.25rem;
+  font-weight: 800; color: #fff; margin-bottom: 0.3rem;
+}
+.receipt-top p { color: rgba(255,255,255,0.78); font-size: 0.85rem; }
+
+/* ── RECEIPT BODY ── */
+.receipt-body { padding: 1.6rem 1.8rem; }
+
+.receipt-title {
+  font-size: 0.7rem; font-weight: 700; color: #aaa;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 0.9rem;
+}
+
+.receipt-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.65rem 0; border-bottom: 1px solid #f0f1ff;
+}
+.receipt-row:last-child { border-bottom: none; }
+
+.receipt-row .key {
+  font-size: 0.83rem; color: #888; font-weight: 500;
+}
+.receipt-row .val {
+  font-size: 0.9rem; color: #222; font-weight: 600;
+  text-align: right; max-width: 60%; word-break: break-all;
+}
+.receipt-row .val.amount {
+  font-size: 1.05rem; color: #4a4de6; font-weight: 800;
+}
+.receipt-row .val.paid-badge {
+  background: #eafaf1; color: #1a9c4e; font-size: 0.78rem;
+  padding: 3px 10px; border-radius: 20px; font-weight: 700;
+}
+
+/* Divider */
+.dashed-divider {
+  border: none; border-top: 2px dashed #e8e9ff; margin: 0.5rem 0;
+}
+
+/* ── ACTION BUTTONS ── */
+.action-btns {
+  width: 100%; max-width: 480px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+.btn-track {
+  width: 100%; padding: 15px;
+  background: #4a4de6; color: #fff;
+  font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 1rem;
+  border: none; border-radius: 50px; cursor: pointer;
+  box-shadow: 0 4px 18px rgba(74,77,230,0.35);
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.btn-track:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(74,77,230,0.45); }
+
+.btn-download {
+  width: 100%; padding: 13px;
+  background: #fff; color: #4a4de6;
+  font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.95rem;
+  border: 2px solid #4a4de6; border-radius: 50px; cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.btn-download:hover { background: #f0f1ff; }
+
+/* Watermark strip */
+.watermark {
+  text-align: center; padding: 0.8rem;
+  font-size: 0.72rem; color: #bbb; border-top: 1px solid #f0f1ff;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>🧾 Payment Receipt</header>
+
+<div class="page">
+
+  <!-- ── RECEIPT CARD ── -->
+  <div class="receipt-card">
+
+    <div class="receipt-top">
+      <div class="success-icon">✅</div>
+      <h2>Payment Successful!</h2>
+      <p>Your fuel order has been confirmed.</p>
+    </div>
+
+    <div class="receipt-body">
+
+      <div class="receipt-title">📄 Receipt Details</div>
+
+      <div class="receipt-row">
+        <span class="key">Order ID</span>
+        <span class="val" id="r-orderId">—</span>
+      </div>
+
+      <div class="receipt-row">
+        <span class="key">Amount Paid</span>
+        <span class="val amount" id="r-amount">—</span>
+      </div>
+
+      <div class="receipt-row">
+        <span class="key">Payment Mode</span>
+        <span class="val">UPI / Online</span>
+      </div>
+
+      <div class="receipt-row">
+        <span class="key">Status</span>
+        <span class="val paid-badge">✔ Paid</span>
+      </div>
+
+      <hr class="dashed-divider">
+
+      <div class="receipt-row">
+        <span class="key">Date</span>
+        <span class="val" id="r-date">—</span>
+      </div>
+
+      <div class="receipt-row">
+        <span class="key">Time</span>
+        <span class="val" id="r-time">—</span>
+      </div>
+
+    </div>
+
+    <div class="watermark">Online Fuel Delivery · Powered by UPI</div>
+
+  </div>
+
+  <!-- ── ACTION BUTTONS (hidden when printing) ── -->
+  <div class="action-btns no-print">
+
+    <!-- ✅ ONLY WAY to reach tracking page -->
+    <button class="btn-track" onclick="goToTracking()">
+      🚚 Go to Order Tracking
+    </button>
+
+    <!-- ✅ Download receipt as PDF -->
+    <button class="btn-download" onclick="downloadReceipt()">
+      ⬇️ Download Receipt (PDF)
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+  // ── Populate receipt from URL params ──
+  const params  = new URLSearchParams(window.location.search);
+  const orderId = params.get("orderId") || "—";
+  const amount  = params.get("amount")  || "—";
+
+  document.getElementById("r-orderId").innerText = orderId;
+  document.getElementById("r-amount").innerText  = "₹" + amount;
+
+  const now = new Date();
+  document.getElementById("r-date").innerText = now.toLocaleDateString("en-IN", {
+    day: "2-digit", month: "short", year: "numeric"
+  });
+  document.getElementById("r-time").innerText = now.toLocaleTimeString("en-IN", {
+    hour: "2-digit", minute: "2-digit", hour12: true
+  });
+
+  // ── Go to Tracking (sets access flag) ──
+  function goToTracking() {
+    // ✅ Set flag so tracking page knows it's a valid entry
+    sessionStorage.setItem("trackingAccess", "1");
+    window.location.href = "/tracking.html?orderId=" + orderId;
+  }
+
+  // ── Download receipt as PDF via browser print ──
+  function downloadReceipt() {
+    window.print();
+  }
+</script>
+
+</body>
+</html>

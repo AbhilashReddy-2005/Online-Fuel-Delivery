@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings - FuelDelivery Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {--sidebar-bg: #1a2744; --sidebar-width: 220px; --accent-blue: #2563eb; --card-radius: 14px; --font: 'Poppins', sans-serif;}
+* {margin: 0; padding: 0; box-sizing: border-box;}
+body {font-family: var(--font); background: #f0f4f8; display: flex; min-height: 100vh; font-size: 14px;}
+.sidebar {width: var(--sidebar-width); background: var(--sidebar-bg); min-height: 100vh; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; z-index: 100;}
+.logo {display: flex; align-items: center; gap: 10px; padding: 22px 20px; border-bottom: 1px solid rgba(255,255,255,0.07); cursor: pointer;}
+.logo-icon {width: 36px; height: 36px; background: linear-gradient(135deg, #2563eb, #06b6d4); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px;}
+.logo-text {color: #fff; font-weight: 700; font-size: 16px;}
+.nav {flex: 1; padding: 16px 0;}
+.nav-item {display: flex; align-items: center; gap: 12px; padding: 11px 20px; color: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.2s; font-size: 13.5px; font-weight: 500; border-left: 3px solid transparent;}
+.nav-item:hover {color: #fff; background: rgba(255,255,255,0.06);}
+.nav-item.active {color: #fff; background: rgba(37,99,235,0.2); border-left-color: #2563eb;}
+.main {margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column;}
+.topbar {background: #fff; padding: 0 28px; height: 62px; display: flex; align-items: center; gap: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); position: sticky; top: 0; z-index: 50;}
+.topbar-title {font-size: 16px; font-weight: 600; color: #1e293b; flex: 1;}
+.avatar {width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #06b6d4); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; cursor: pointer;}
+.content {padding: 28px; flex: 1; overflow-y: auto;}
+.page-title {font-size: 24px; font-weight: 700; color: #1e293b; margin-bottom: 28px;}
+.settings-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px;}
+.settings-card {background: #fff; border-radius: var(--card-radius); padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);}
+.settings-title {font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;}
+.settings-title i {color: #2563eb; font-size: 20px;}
+.form-group {margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px;}
+.form-label {font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;}
+.form-input, .form-select {padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: var(--font); font-size: 13px;}
+.form-input:focus, .form-select:focus {outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1);}
+.toggle-switch {position: relative; width: 50px; height: 28px; background: #e2e8f0; border-radius: 14px; cursor: pointer; transition: all 0.2s;}
+.toggle-switch.active {background: #10b981;}
+.toggle-slider {position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; background: #fff; border-radius: 50%; transition: all 0.2s;}
+.toggle-switch.active .toggle-slider {left: 24px;}
+.btn {padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-family: var(--font); font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: all 0.2s; width: 100%;}
+.btn-primary {background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff;}
+.btn-primary:hover {transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.35);}
+.btn-danger {background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff;}
+.btn-danger:hover {transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239,68,68,0.35);}
+.section-divider {height: 1px; background: #e2e8f0; margin: 20px 0;}
+.info-box {background: #eff6ff; border-left: 4px solid #2563eb; padding: 16px; border-radius: 6px; margin-top: 12px;}
+.info-box-title {font-size: 12px; font-weight: 700; color: #1e40af;}
+.info-box-text {font-size: 13px; color: #1e40af; margin-top: 4px;}
+@keyframes slideIn {from {transform: translateX(400px); opacity: 0;} to {transform: translateX(0); opacity: 1;}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo" onclick="goHome()">
+    <div class="logo-icon"><i class="fa-solid fa-truck-fast"></i></div>
+    <span class="logo-text">FuelDelivery</span>
+  </div>
+  <nav class="nav">
+    <div class="nav-item" onclick="goHome()"><i class="fa-solid fa-gauge-high"></i> Dashboard</div>
+    <div class="nav-item" onclick="navigateTo('orders')"><i class="fa-solid fa-box"></i> Orders</div>
+    <div class="nav-item" onclick="navigateTo('customers')"><i class="fa-solid fa-users"></i> Customers</div>
+    <div class="nav-item" onclick="navigateTo('inventory')"><i class="fa-solid fa-warehouse"></i> Inventory</div>
+    <div class="nav-item" onclick="navigateTo('drivers')"><i class="fa-solid fa-user-tie"></i> Drivers</div>
+    <div class="nav-item" onclick="navigateTo('fleet')"><i class="fa-solid fa-truck"></i> Fleet</div>
+    <div class="nav-item" onclick="navigateTo('payments')"><i class="fa-solid fa-credit-card"></i> Payments</div>
+    <div class="nav-item" onclick="navigateTo('pricing')"><i class="fa-solid fa-tags"></i> Pricing</div>
+    <div class="nav-item" onclick="navigateTo('reports')"><i class="fa-solid fa-chart-line"></i> Reports</div>
+    <div class="nav-item" onclick="navigateTo('tracking')"><i class="fa-solid fa-location-dot"></i> Tracking</div>
+  </nav>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title"><i class="fa-solid fa-cog"></i> Settings</span>
+    <div class="avatar" onclick="handleLogout()">A</div>
+  </div>
+
+  <div class="content">
+    <h1 class="page-title">⚙️ Configuration & Settings</h1>
+
+    <div class="settings-grid">
+      <!-- Business Settings -->
+      <div class="settings-card">
+        <div class="settings-title"><i class="fa-solid fa-briefcase"></i> Business Settings</div>
+        
+        <div class="form-group">
+          <label class="form-label">App Name</label>
+          <input type="text" class="form-input" id="appName" value="FuelGo">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Currency</label>
+          <select class="form-select" id="currency">
+            <option value="INR">₹ Indian Rupee</option>
+            <option value="USD">$ US Dollar</option>
+            <option value="EUR">€ Euro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Timezone</label>
+          <select class="form-select" id="timezone">
+            <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+            <option value="UTC">UTC</option>
+            <option value="Asia/Dubai">Asia/Dubai</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" onclick="saveBusinessSettings()"><i class="fa-solid fa-save"></i> Save</button>
+      </div>
+
+      <!-- Delivery Settings -->
+      <div class="settings-card">
+        <div class="settings-title"><i class="fa-solid fa-truck"></i> Delivery Settings</div>
+        
+        <div class="form-group">
+          <label class="form-label">Delivery Charges (₹)</label>
+          <input type="number" class="form-input" id="deliveryCharges" placeholder="50" step="0.01">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Min Order Value (₹)</label>
+          <input type="number" class="form-input" id="minOrderValue" placeholder="500">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Max Order Value (₹)</label>
+          <input type="number" class="form-input" id="maxOrderValue" placeholder="50000">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Business Hours</label>
+          <input type="text" class="form-input" id="businessHours" placeholder="9:00 AM - 11:00 PM">
+        </div>
+
+        <button class="btn btn-primary" onclick="saveDeliverySettings()"><i class="fa-solid fa-save"></i> Save</button>
+      </div>
+
+      <!-- Support Settings -->
+      <div class="settings-card">
+        <div class="settings-title"><i class="fa-solid fa-headset"></i> Support Settings</div>
+        
+        <div class="form-group">
+          <label class="form-label">Support Email</label>
+          <input type="email" class="form-input" id="supportEmail" placeholder="support@fuelgo.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Support Phone</label>
+          <input type="tel" class="form-input" id="supportPhone" placeholder="+91-9876543210">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Support Address</label>
+          <input type="text" class="form-input" id="supportAddress" placeholder="Office address">
+        </div>
+
+        <button class="btn btn-primary" onclick="saveSupportSettings()"><i class="fa-solid fa-save"></i> Save</button>
+      </div>
+
+      <!-- Notification Settings -->
+      <div class="settings-card">
+        <div class="settings-title"><i class="fa-solid fa-bell"></i> Notifications</div>
+        
+        <div class="form-group">
+          <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+            Email Notifications
+            <div class="toggle-switch active" id="emailToggle" onclick="toggleSwitch(this)"><div class="toggle-slider"></div></div>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+            SMS Notifications
+            <div class="toggle-switch" id="smsToggle" onclick="toggleSwitch(this)"><div class="toggle-slider"></div></div>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+            Push Notifications
+            <div class="toggle-switch active" id="pushToggle" onclick="toggleSwitch(this)"><div class="toggle-slider"></div></div>
+          </label>
+        </div>
+
+        <button class="btn btn-primary" onclick="saveNotificationSettings()"><i class="fa-solid fa-save"></i> Save</button>
+      </div>
+
+      <!-- System Settings -->
+      <div class="settings-card">
+        <div class="settings-title"><i class="fa-solid fa-sliders"></i> System Settings</div>
+        
+        <div class="form-group">
+          <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+            Maintenance Mode
+            <div class="toggle-switch" id="maintenanceToggle" onclick="toggleMaintenance(this)"><div class="toggle-slider"></div></div>
+          </label>
+          <div class="info-box">
+            <div class="info-box-title">⚠️ Warning</div>
+            <div class="info-box-text">Turning on maintenance mode will prevent users from accessing the app.</div>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <button class="btn btn-danger" onclick="clearCache()"><i class="fa-solid fa-trash"></i> Clear Cache</button>
+      </div>
+
+      <!-- Version & Status -->
+      <div class="settings-card">
+        <div class="settings-title"><i class="fa-solid fa-circle-info"></i> App Information</div>
+        
+        <div class="form-group">
+          <label class="form-label">Version</label>
+          <input type="text" class="form-input" value="1.0.0" disabled>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <input type="text" class="form-input" value="✅ Running" disabled style="color: #10b981;">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Database</label>
+          <input type="text" class="form-input" value="MongoDB" disabled>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Last Updated</label>
+          <input type="text" class="form-input" id="lastUpdated" disabled>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  checkAuth();
+  loadSettings();
+  updateTimestamp();
+});
+
+function checkAuth() {
+  if (!localStorage.getItem("adminToken")) {
+    window.location.href = "/admin-login.html";
+  }
+}
+
+async function loadSettings() {
+  try {
+    const response = await fetch("/api/settings");
+    const result = await response.json();
+    const settings = result.data;
+
+    document.getElementById("appName").value = settings.appName || "FuelGo";
+    document.getElementById("currency").value = settings.currency || "INR";
+    document.getElementById("timezone").value = settings.timezone || "Asia/Kolkata";
+    document.getElementById("deliveryCharges").value = settings.deliveryCharges || 50;
+    document.getElementById("minOrderValue").value = settings.minOrderValue || 500;
+    document.getElementById("maxOrderValue").value = settings.maxOrderValue || 50000;
+    document.getElementById("businessHours").value = settings.businessHours || "9:00 AM - 11:00 PM";
+    document.getElementById("supportEmail").value = settings.supportEmail || "";
+    document.getElementById("supportPhone").value = settings.supportPhone || "";
+    document.getElementById("supportAddress").value = settings.supportAddress || "";
+  } catch (err) {
+    console.error("Error loading settings", err);
+  }
+}
+
+function toggleSwitch(element) {
+  element.classList.toggle("active");
+}
+
+async function toggleMaintenance(element) {
+  element.classList.toggle("active");
+  const isActive = element.classList.contains("active");
+  try {
+    await fetch("/api/settings/maintenance", { method: "PATCH" });
+    showNotification(isActive ? "Maintenance mode enabled" : "Maintenance mode disabled", "success");
+  } catch (err) {
+    showNotification("Error updating maintenance mode", "error");
+  }
+}
+
+async function saveBusinessSettings() {
+  const settings = {
+    appName: document.getElementById("appName").value,
+    currency: document.getElementById("currency").value,
+    timezone: document.getElementById("timezone").value,
+  };
+
+  try {
+    const response = await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(settings),
+    });
+    const result = await response.json();
+    if (result.success) {
+      showNotification("Business settings saved!", "success");
+    }
+  } catch (err) {
+    showNotification("Error saving settings", "error");
+  }
+}
+
+async function saveDeliverySettings() {
+  const settings = {
+    deliveryCharges: Number(document.getElementById("deliveryCharges").value),
+    minOrderValue: Number(document.getElementById("minOrderValue").value),
+    maxOrderValue: Number(document.getElementById("maxOrderValue").value),
+    businessHours: document.getElementById("businessHours").value,
+  };
+
+  try {
+    const response = await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(settings),
+    });
+    const result = await response.json();
+    if (result.success) {
+      showNotification("Delivery settings saved!", "success");
+    }
+  } catch (err) {
+    showNotification("Error saving settings", "error");
+  }
+}
+
+async function saveSupportSettings() {
+  const settings = {
+    supportEmail: document.getElementById("supportEmail").value,
+    supportPhone: document.getElementById("supportPhone").value,
+    supportAddress: document.getElementById("supportAddress").value,
+  };
+
+  try {
+    const response = await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(settings),
+    });
+    const result = await response.json();
+    if (result.success) {
+      showNotification("Support settings saved!", "success");
+    }
+  } catch (err) {
+    showNotification("Error saving settings", "error");
+  }
+}
+
+async function saveNotificationSettings() {
+  const settings = {
+    emailNotifications: document.getElementById("emailToggle").classList.contains("active"),
+    smsNotifications: document.getElementById("smsToggle").classList.contains("active"),
+    pushNotifications: document.getElementById("pushToggle").classList.contains("active"),
+  };
+
+  try {
+    const response = await fetch("/api/settings/notifications", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(settings),
+    });
+    const result = await response.json();
+    if (result.success) {
+      showNotification("Notification settings saved!", "success");
+    }
+  } catch (err) {
+    showNotification("Error saving settings", "error");
+  }
+}
+
+function clearCache() {
+  if (confirm("Clear all cached data? This cannot be undone.")) {
+    localStorage.clear();
+    showNotification("Cache cleared!", "success");
+    setTimeout(() => window.location.reload(), 1000);
+  }
+}
+
+function updateTimestamp() {
+  const now = new Date().toLocaleString('en-IN');
+  document.getElementById("lastUpdated").value = now;
+}
+
+function goHome() {
+  window.location.href = "/admin/admin-dashboard.html";
+}
+
+function navigateTo(page) {
+  if (page === "reports") {
+    window.location.href = `/admin/reports.html`;
+  } else if (page === "tracking") {
+    window.location.href = `/admin/tracking.html`;
+  } else {
+    window.location.href = `/admin/manage-${page}.html`;
+  }
+}
+
+function handleLogout() {
+  if (confirm("Logout?")) {
+    localStorage.removeItem("adminToken");
+    window.location.href = "/admin-login.html";
+  }
+}
+
+function showNotification(message, type = "success") {
+  const notification = document.createElement("div");
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 24px;
+    background: ${type === "success" ? "#10b981" : "#ef4444"};
+    color: white;
+    border-radius: 8px;
+    font-weight: 500;
+    z-index: 10000;
+  `;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
+</script>
+
+</body>
+</html>

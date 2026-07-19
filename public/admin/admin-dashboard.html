@@ -1,0 +1,2810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FuelGo — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sidebar-bg: #0f1623;
+  --sidebar-hover: #1a2333;
+  --sidebar-active: #1e3a5f;
+  --nav-bg: #ffffff;
+  --body-bg: #f0f4f8;
+  --card-bg: #ffffff;
+  --text-primary: #1a2233;
+  --text-secondary: #6b7a99;
+  --text-muted: #9aa5be;
+  --border: #e4eaf2;
+  --orange: #f97316;
+  --orange-light: #fff3ea;
+  --green: #10b981;
+  --green-light: #edfdf5;
+  --blue: #2563eb;
+  --blue-light: #eff6ff;
+  --red: #ef4444;
+  --red-light: #fef2f2;
+  --teal: #0d9488;
+  --purple: #7c3aed;
+  --radius: 14px;
+  --shadow: 0 4px 24px rgba(15,22,35,0.08);
+  --shadow-sm: 0 2px 8px rgba(15,22,35,0.06);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--body-bg);
+  color: var(--text-primary);
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 220px;
+  min-width: 220px;
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+}
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.logo-icon {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.logo-text {
+  font-family: 'Syne', sans-serif;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+.sidebar-nav { flex: 1; padding: 12px 0; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 20px;
+  color: #8899bb;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  position: relative;
+}
+.nav-item:hover { background: var(--sidebar-hover); color: #fff; }
+.nav-item.active {
+  background: var(--sidebar-active);
+  color: #fff;
+  border-left-color: #2563eb;
+}
+.nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.nav-item .nav-arrow { margin-left: auto; font-size: 11px; opacity: 0.5; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 20px;
+}
+
+/* ── MAIN ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  height: 60px;
+  gap: 4px;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+.topbar-nav { display: flex; align-items: center; gap: 4px; flex: 1; }
+.topbar-btn {
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.topbar-btn:hover { background: var(--body-bg); color: var(--text-primary); }
+.topbar-btn.active { background: var(--blue-light); color: var(--blue); }
+.topbar-actions { display: flex; align-items: center; gap: 8px; }
+.icon-btn {
+  position: relative;
+  width: 36px; height: 36px;
+  background: var(--body-bg);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+.icon-btn:hover { background: var(--border); }
+.icon-badge {
+  position: absolute;
+  top: -4px; right: -4px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  pointer-events: none; /* ← fix: let clicks pass through badge */
+  border: 2px solid #fff;
+  z-index: 1;
+}
+.avatar {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  position: relative;
+  border: none;
+  outline: none;
+  transition: all 0.2s;
+}
+.avatar:hover { transform: scale(1.08); box-shadow: 0 0 0 3px rgba(37,99,235,0.25); }
+
+/* ── DROPDOWNS ── */
+.dropdown-wrap { position: relative; }
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 320px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(15,22,35,0.16);
+  border: 1px solid var(--border);
+  z-index: 500;
+  display: none;
+  overflow: hidden;
+  animation: dropIn 0.2s ease;
+}
+.dropdown-panel.open { display: block; }
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.dp-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px;
+}
+.dp-mark-all {
+  font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+  color: var(--blue); cursor: pointer; border: none; background: none;
+}
+.dp-mark-all:hover { text-decoration: underline; }
+.dp-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background 0.15s;
+}
+.dp-item:last-of-type { border-bottom: none; }
+.dp-item:hover { background: var(--body-bg); }
+.dp-item.unread { background: var(--blue-light); }
+.dp-item.unread:hover { background: #dbeafe; }
+.dp-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.dp-body .dp-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.dp-body .dp-sub { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+.dp-body .dp-time { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.dp-unread-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--blue);
+  flex-shrink: 0; margin-top: 5px;
+}
+.dp-footer {
+  padding: 12px 16px; text-align: center;
+  border-top: 1px solid var(--border);
+}
+.dp-footer-btn {
+  font-size: 13px; font-weight: 600; color: var(--blue);
+  border: none; background: none; cursor: pointer; width: 100%;
+}
+.dp-footer-btn:hover { text-decoration: underline; }
+/* Profile dropdown */
+.profile-panel {
+  width: 220px;
+}
+.profile-header {
+  padding: 16px; text-align: center;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+}
+.profile-avatar-lg {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 20px; color: #fff; margin: 0 auto 8px;
+}
+.profile-name { font-weight: 700; font-size: 14px; }
+.profile-role { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.profile-menu-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px; font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: background 0.15s; border: none; background: none; width: 100%; text-align: left;
+}
+.profile-menu-item:hover { background: var(--body-bg); }
+.profile-menu-item.danger { color: var(--red); }
+.profile-menu-item.danger:hover { background: var(--red-light); }
+
+/* ── CONTENT ── */
+.content { flex: 1; overflow-y: auto; padding: 28px; }
+
+/* ── PAGE SECTIONS ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── PAGE HEADER ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.page-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+/* ── KPI CARDS ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 28px; }
+.kpi-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.kpi-label { font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.kpi-value { font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.kpi-sub { font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; }
+.kpi-progress { height: 4px; background: #eee; border-radius: 2px; overflow: hidden; margin-bottom: 16px; }
+.kpi-progress-bar { height: 100%; border-radius: 2px; }
+.kpi-alert { font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; margin-bottom: 16px; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 9px;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-orange { background: var(--orange); color: #fff; width: 100%; justify-content: center; }
+.btn-green { background: var(--green); color: #fff; width: 100%; justify-content: center; }
+.btn-blue { background: var(--blue); color: #fff; width: 100%; justify-content: center; }
+.btn-red { background: var(--red); color: #fff; width: 100%; justify-content: center; }
+.btn-outline { background: transparent; color: var(--text-primary); border: 1.5px solid var(--border); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-success { background: var(--green); color: #fff; }
+.btn-danger { background: var(--red); color: #fff; }
+
+/* ── MODULE CARDS ── */
+.module-section-label {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin: 8px 0 20px;
+  text-transform: uppercase;
+}
+.module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px; }
+.module-card {
+  border-radius: var(--radius);
+  padding: 28px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.module-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
+.module-card::after {
+  content: '';
+  position: absolute;
+  right: -30px; top: -30px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+}
+.mc-blue { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+.mc-teal { background: linear-gradient(135deg, #0d9488, #0f766e); }
+.mc-orange { background: linear-gradient(135deg, #f97316, #ea580c); }
+.mc-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.mc-purple { background: linear-gradient(135deg, #7c3aed, #6d28d9); }
+.mc-indigo { background: linear-gradient(135deg, #4f46e5, #4338ca); }
+.module-icon {
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+.module-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.module-desc { font-size: 12px; opacity: 0.82; line-height: 1.6; margin-bottom: 20px; }
+.module-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.module-btn:hover { background: rgba(0,0,0,0.35); }
+
+/* Settings card */
+.settings-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 28px;
+  border: 1px solid var(--border);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+.settings-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.settings-links { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px; }
+.settings-link {
+  padding: 7px 14px;
+  background: var(--body-bg);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.settings-link:hover { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+/* ── TABLE PAGES ── */
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 14px;
+  flex: 1;
+  min-width: 200px;
+}
+.search-box input {
+  border: none;
+  outline: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text-primary);
+  width: 100%;
+  background: transparent;
+}
+.filter-select {
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  cursor: pointer;
+}
+.table-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--body-bg); border-bottom: 1px solid var(--border); }
+th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+td { padding: 14px 16px; font-size: 13px; border-bottom: 1px solid var(--border); }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--body-bg); }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-green { background: var(--green-light); color: var(--green); }
+.badge-orange { background: var(--orange-light); color: var(--orange); }
+.badge-red { background: var(--red-light); color: var(--red); }
+.badge-blue { background: var(--blue-light); color: var(--blue); }
+.badge-gray { background: #f1f5f9; color: #64748b; }
+.badge-purple { background: #f3f0ff; color: var(--purple); }
+.action-btns { display: flex; gap: 6px; }
+.action-btn {
+  width: 30px; height: 30px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+.action-btn:hover { transform: scale(1.1); }
+.ab-edit { background: var(--blue-light); color: var(--blue); }
+.ab-delete { background: var(--red-light); color: var(--red); }
+.ab-view { background: var(--green-light); color: var(--green); }
+.table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.pagination { display: flex; gap: 4px; }
+.page-btn {
+  width: 32px; height: 32px;
+  border: 1.5px solid var(--border);
+  background: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.page-btn:hover, .page-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--card-bg);
+  border-radius: 18px;
+  padding: 30px;
+  width: 540px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+  animation: modalIn 0.25s ease;
+}
+@keyframes modalIn { from { opacity:0; transform: scale(0.95) translateY(10px); } to { opacity:1; transform: scale(1) translateY(0); } }
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.modal-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; }
+.modal-close {
+  width: 32px; height: 32px;
+  border: none;
+  background: var(--body-bg);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.modal-close:hover { background: var(--red-light); color: var(--red); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+label { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+input, select, textarea {
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s;
+  background: var(--card-bg);
+}
+input:focus, select:focus, textarea:focus { border-color: var(--blue); }
+textarea { resize: vertical; min-height: 80px; }
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+
+/* ── STATS ROW ── */
+.stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 24px; }
+.stat-mini {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.stat-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.stat-val { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
+.stat-lbl { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
+
+/* ── CHART PLACEHOLDER ── */
+.chart-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+.chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.chart-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; }
+.bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 140px; }
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.bar { width: 100%; border-radius: 6px 6px 0 0; transition: opacity 0.2s; cursor: pointer; }
+.bar:hover { opacity: 0.8; }
+.bar-lbl { font-size: 10px; color: var(--text-muted); }
+
+/* Map Placeholder */
+.map-placeholder {
+  background: linear-gradient(135deg, #e8f4fd, #d1e9f6);
+  border-radius: var(--radius);
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #93c5fd;
+  margin-bottom: 24px;
+  font-size: 40px;
+  gap: 12px;
+  color: var(--blue);
+}
+.map-placeholder p { font-size: 14px; color: var(--text-secondary); }
+
+/* Inventory progress */
+.inv-level {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.inv-bar { flex: 1; height: 6px; background: #e4eaf2; border-radius: 3px; overflow: hidden; }
+.inv-fill { height: 100%; border-radius: 3px; }
+
+/* Notification dot */
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.dot-green { background: var(--green); }
+.dot-orange { background: var(--orange); }
+.dot-red { background: var(--red); }
+.dot-gray { background: #94a3b8; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  background: #1a2233;
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  animation: slideUp 0.3s ease;
+}
+.toast.show { display: flex; }
+@keyframes slideUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+
+/* Reports */
+.report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.donut-ring { width: 100px; height: 100px; position: relative; margin: 0 auto 12px; }
+.donut-svg { transform: rotate(-90deg); }
+.donut-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; }
+
+/* Settings form */
+.settings-section {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 18px;
+}
+.settings-section-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.toggle-row:last-child { border-bottom: none; }
+.toggle-info .toggle-label { font-size: 14px; font-weight: 500; }
+.toggle-info .toggle-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.toggle { position: relative; width: 42px; height: 22px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0;
+  background: #cbd5e1;
+  border-radius: 22px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  top: 3px; left: 3px;
+  transition: 0.3s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle input:checked + .toggle-slider { background: var(--blue); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+/* Alert banner */
+.alert-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: #9a3412;
+}
+.alert-banner-err {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+/* Timeline */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.tl-item { display: flex; gap: 14px; padding-bottom: 20px; position: relative; }
+.tl-item::before { content: ''; position: absolute; left: 15px; top: 32px; bottom: 0; width: 2px; background: var(--border); }
+.tl-item:last-child::before { display: none; }
+.tl-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.tl-content .tl-title { font-size: 13px; font-weight: 600; }
+.tl-content .tl-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.tl-content .tl-desc { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+/* Avatar group */
+.driver-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* Pricing card */
+.price-zone-card {
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--body-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.price-zone-name { font-weight: 600; font-size: 14px; }
+.price-zone-rate { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: var(--blue); }
+.price-zone-meta { font-size: 12px; color: var(--text-secondary); }
+
+/* Responsive scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">⛽</div>
+    <span class="logo-text">FuelGo</span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" onclick="showPage('dashboard', this)">
+      <span class="nav-icon">🏠</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('orders', this)">
+      <span class="nav-icon">📦</span> Orders
+      <span class="nav-badge">12</span>
+    </div>
+    <div class="nav-item" onclick="showPage('drivers', this)">
+      <span class="nav-icon">👤</span> Drivers
+      <span class="nav-arrow">›</span>
+    </div>
+    <div class="nav-item" onclick="showPage('users', this)">
+      <span class="nav-icon">🧑‍💻</span> Users
+      <span class="nav-arrow">›</span>
+    </div>
+    <div class="nav-item" onclick="showPage('inventory', this)">
+      <span class="nav-icon">🗃</span> Inventory
+      <span class="nav-arrow">›</span>
+    </div>
+    <div class="nav-item" onclick="showPage('fleet', this)">
+      <span class="nav-icon">🚛</span> Fleet
+      <span class="nav-arrow">›</span>
+    </div>
+    <div class="nav-item" onclick="showPage('payments', this)">
+      <span class="nav-icon">💳</span> Payments
+      <span class="nav-arrow">›</span>
+    </div>
+    <div class="nav-item" onclick="showPage('pricing', this)">
+      <span class="nav-icon">🏷</span> Pricing
+      <span class="nav-arrow">›</span>
+    </div>
+    <div class="nav-item" onclick="showPage('reports', this)">
+      <span class="nav-icon">📊</span> Reports
+    </div>
+    <div class="nav-item" onclick="showPage('settings', this)">
+      <span class="nav-icon">⚙</span> Settings
+      <span class="nav-arrow">›</span>
+    </div>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-nav">
+      <button class="topbar-btn active" onclick="showPage('dashboard', null)">🏠 Dashboard</button>
+      <button class="topbar-btn" onclick="showPage('orders', null)">📦 Orders</button>
+      <button class="topbar-btn" onclick="showPage('reports', null)">📊 Reports ▾</button>
+      <button class="topbar-btn" onclick="showPage('settings', null)">⚙ Settings</button>
+    </div>
+    <div class="topbar-actions">
+
+      <!-- Messages dropdown -->
+      <div class="dropdown-wrap">
+        <button class="icon-btn" onclick="toggleDropdown('dd-messages')">
+          ✉️
+          <span class="icon-badge" style="background:var(--red)"></span>
+        </button>
+        <div class="dropdown-panel" id="dd-messages">
+          <div class="dp-header">
+            Messages
+            <button class="dp-mark-all" onclick="markAllRead('dd-messages','6')">Mark all read</button>
+          </div>
+          <div class="dp-item unread">
+            <div class="dp-icon" style="background:var(--blue-light)">👤</div>
+            <div class="dp-body">
+              <div class="dp-title">Suresh D. — Driver</div>
+              <div class="dp-sub">Reached Zone B, awaiting customer confirmation</div>
+              <div class="dp-time">2 min ago</div>
+            </div>
+            <div class="dp-unread-dot"></div>
+          </div>
+          <div class="dp-item unread">
+            <div class="dp-icon" style="background:var(--orange-light)">🚛</div>
+            <div class="dp-body">
+              <div class="dp-title">Fleet Alert</div>
+              <div class="dp-sub">Tanker T-03 maintenance completed, ready for dispatch</div>
+              <div class="dp-time">15 min ago</div>
+            </div>
+            <div class="dp-unread-dot"></div>
+          </div>
+          <div class="dp-item unread">
+            <div class="dp-icon" style="background:var(--green-light)">👥</div>
+            <div class="dp-body">
+              <div class="dp-title">Sri Motors Ltd</div>
+              <div class="dp-sub">Requesting 200L diesel delivery for tomorrow 8 AM</div>
+              <div class="dp-time">32 min ago</div>
+            </div>
+            <div class="dp-unread-dot"></div>
+          </div>
+          <div class="dp-item">
+            <div class="dp-icon" style="background:#f1f5f9">💳</div>
+            <div class="dp-body">
+              <div class="dp-title">Payment Team</div>
+              <div class="dp-sub">Monthly invoice sent to 48 corporate customers</div>
+              <div class="dp-time">1 hr ago</div>
+            </div>
+          </div>
+          <div class="dp-footer">
+            <button class="dp-footer-btn" onclick="showPage('settings',null);closeAllDropdowns()">View all messages →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat dropdown -->
+      <div class="dropdown-wrap">
+        <button class="icon-btn" onclick="toggleDropdown('dd-chat')">
+          💬
+          <span class="icon-badge" style="background:var(--orange)">8</span>
+        </button>
+        <div class="dropdown-panel" id="dd-chat">
+          <div class="dp-header">
+            Live Chat
+            <button class="dp-mark-all" onclick="markAllRead('dd-chat','8')">Mark all read</button>
+          </div>
+          <div class="dp-item unread">
+            <div class="dp-icon" style="background:var(--blue-light)">👤</div>
+            <div class="dp-body">
+              <div class="dp-title">Kiran M.</div>
+              <div class="dp-sub">Can I take a 30-min break? Next delivery is 45 min away</div>
+              <div class="dp-time">Just now</div>
+            </div>
+            <div class="dp-unread-dot"></div>
+          </div>
+          <div class="dp-item unread">
+            <div class="dp-icon" style="background:var(--purple)" style="color:#fff">R</div>
+            <div class="dp-body">
+              <div class="dp-title">Ravi Kumar</div>
+              <div class="dp-sub">My order is delayed by 20 minutes, please update</div>
+              <div class="dp-time">5 min ago</div>
+            </div>
+            <div class="dp-unread-dot"></div>
+          </div>
+          <div class="dp-item unread">
+            <div class="dp-icon" style="background:var(--green-light)">👤</div>
+            <div class="dp-body">
+              <div class="dp-title">Anand V.</div>
+              <div class="dp-sub">Delivered #ORD-1036. Customer signed. Heading back</div>
+              <div class="dp-time">12 min ago</div>
+            </div>
+            <div class="dp-unread-dot"></div>
+          </div>
+          <div class="dp-item">
+            <div class="dp-icon" style="background:var(--orange-light)">📞</div>
+            <div class="dp-body">
+              <div class="dp-title">Support Team</div>
+              <div class="dp-sub">Customer complaint resolved for #ORD-1032</div>
+              <div class="dp-time">1 hr ago</div>
+            </div>
+          </div>
+          <div class="dp-footer">
+            <button class="dp-footer-btn" onclick="showToast('💬 Opening chat panel...');closeAllDropdowns()">Open chat panel →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications dropdown -->
+      <div class="dropdown-wrap">
+        <button class="icon-btn" onclick="toggleDropdown('dd-notif')">
+          🔔
+          <span class="icon-badge" style="background:var(--blue)">4</span>
+        </button>
+        <div class="dropdown-panel" id="dd-notif">
+          <div class="dp-header">Notifications <button class="dp-mark-all" onclick="markAllRead('dd-notif','4')">Mark all read</button></div>
+          <div class="dp-item unread">
+            <div class="dp-icon" style="background:var(--red-light)">⚠️</div>
+            <div class="dp-body"><div class="dp-title">Low Diesel Stock Alert</div><div class="dp-sub">Diesel level at 26%. Restock required immediately.</div><div class="dp-time">5 min ago</div></div>
+            <div class="dp-unread-dot"></div>
+          </div>
+          <div class="dp-item unread">
+            <div class="dp-icon" style="background:var(--orange-light)">📦</div>
+            <div class="dp-body"><div class="dp-title">12 Orders Unassigned</div><div class="dp-sub">Pending orders waiting for driver assignment.</div><div class="dp-time">10 min ago</div></div>
+            <div class="dp-unread-dot"></div>
+          </div>
+          <div class="dp-item unread">
+            <div class="dp-icon" style="background:var(--green-light)">💰</div>
+            <div class="dp-body"><div class="dp-title">Daily Revenue Milestone</div><div class="dp-sub">You've crossed ₹30,000 revenue today!</div><div class="dp-time">1 hr ago</div></div>
+            <div class="dp-unread-dot"></div>
+          </div>
+          <div class="dp-item">
+            <div class="dp-icon" style="background:var(--blue-light)">🔧</div>
+            <div class="dp-body"><div class="dp-title">Tanker T-03 Service Done</div><div class="dp-sub">Vehicle cleared for duty. Ready to assign.</div><div class="dp-time">2 hr ago</div></div>
+          </div>
+          <div class="dp-footer"><button class="dp-footer-btn" onclick="showToast('🔔 All notifications');closeAllDropdowns()">View all notifications →</button></div>
+        </div>
+      </div>
+
+      <!-- Profile dropdown -->
+      <div class="dropdown-wrap">
+        <button class="avatar" onclick="toggleDropdown('dd-profile')">A</button>
+        <div class="dropdown-panel profile-panel" id="dd-profile">
+          <div class="profile-header">
+            <div class="profile-avatar-lg">A</div>
+            <div class="profile-name">Admin User</div>
+            <div class="profile-role">Super Administrator</div>
+          </div>
+          <button class="profile-menu-item" onclick="showToast('👤 Opening profile...');closeAllDropdowns()">👤 My Profile</button>
+          <button class="profile-menu-item" onclick="showPage('settings',null);closeAllDropdowns()">⚙ Account Settings</button>
+          <button class="profile-menu-item" onclick="showToast('🔑 Change password');closeAllDropdowns()">🔑 Change Password</button>
+          <button class="profile-menu-item" onclick="showToast('📊 Activity log');closeAllDropdowns()">📊 Activity Log</button>
+          <div style="border-top:1px solid var(--border);margin:4px 0"></div>
+          <button class="profile-menu-item danger" onclick="showToast('👋 Logging out...');closeAllDropdowns()">🚪 Logout</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ══════════════════════════════════════ DASHBOARD ══════════════════════════════════════ -->
+    <div id="page-dashboard" class="page active">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Online fuel delivery — admin dashboard modules</div>
+          <div class="page-subtitle">Welcome back, Admin · Last updated just now</div>
+        </div>
+        <button class="btn btn-primary" onclick="showToast('🔄 Dashboard refreshed')">🔄 Refresh</button>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label" style="color:var(--orange)">🛒 Orders today</div>
+          <div class="kpi-value"><span id="kpi-orders-today">—</span> <span style="font-size:16px;color:var(--text-secondary)">live orders</span></div>
+          <div class="kpi-sub" style="color:var(--orange);font-weight:600" id="kpi-revenue-today">Loading...</div>
+          <button class="btn btn-orange" onclick="showPage('orders',null)">View Orders →</button>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label" style="color:var(--green)">📈 Revenue (Total)</div>
+          <div class="kpi-value" id="kpi-revenue-total">—</div>
+          <div class="kpi-sub">From all delivered orders</div>
+          <button class="btn btn-green" onclick="showPage('reports',null)">View Reports →</button>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label" style="color:var(--blue)">🚛 Active deliveries</div>
+          <div class="kpi-value"><span id="kpi-active-deliveries">—</span> <span style="font-size:16px;color:var(--text-secondary)">in-progress</span></div>
+          <div class="kpi-sub"><span class="dot dot-green"></span> <span id="kpi-pending-label">Loading...</span></div>
+          <button class="btn btn-blue" onclick="showMapModal()">Track Deliveries →</button>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label" style="color:var(--red)">⛽ Fuel stock</div>
+          <div class="kpi-value" id="kpi-fuel-stock">—</div>
+          <div class="kpi-progress"><div class="kpi-progress-bar" id="kpi-fuel-bar" style="width:0%;background:var(--red)"></div></div>
+          <div class="kpi-alert" id="kpi-fuel-alert" style="color:var(--red)">⚠ Loading stock...</div>
+          <button class="btn btn-red" onclick="showPage('inventory',null)">Inventory Alerts →</button>
+        </div>
+      </div>
+
+      <!-- MODULE CARDS -->
+      <div class="module-section-label">— KPI Overview Cards —</div>
+      <div class="module-grid">
+        <div class="module-card mc-blue">
+          <div class="module-icon">📋</div>
+          <div class="module-title">Order management</div>
+          <div class="module-desc">New / pending / assigned<br>In-transit / delivered / cancelled<br>Filter by status, area, date</div>
+          <button class="module-btn" onclick="showPage('orders',null)">Manage Orders →</button>
+        </div>
+        <div class="module-card mc-teal">
+          <div class="module-icon">🗺</div>
+          <div class="module-title">Live delivery map</div>
+          <div class="module-desc">Driver GPS tracking<br>Customer locations pinned<br>Route progress overlay</div>
+          <button class="module-btn" onclick="showMapModal()">Open Map →</button>
+        </div>
+        <div class="module-card mc-blue" style="background:linear-gradient(135deg,#3b82f6,#2563eb)">
+          <div class="module-icon">👤</div>
+          <div class="module-title">Driver management</div>
+          <div class="module-desc">Driver list, availability status<br>Assign orders to drivers<br>Trip history, earnings</div>
+          <button class="module-btn" onclick="showPage('drivers',null)">Manage Drivers →</button>
+        </div>
+        <div class="module-card mc-teal" style="background:linear-gradient(135deg,#14b8a6,#0d9488)">
+          <div class="module-icon">🧑‍💻</div>
+          <div class="module-title">User management</div>
+          <div class="module-desc">Registered app users<br>Name, email, phone details<br>View &amp; manage all accounts</div>
+          <button class="module-btn" onclick="showPage('users',null)">Manage Users →</button>
+        </div>
+        <div class="module-card mc-orange">
+          <div class="module-icon">⛽</div>
+          <div class="module-title">Fuel inventory</div>
+          <div class="module-desc">Stock per fuel type (petrol/diesel)<br>Low stock alerts<br>Supplier restock requests</div>
+          <button class="module-btn" onclick="showPage('inventory',null)">View Inventory →</button>
+        </div>
+        <div class="module-card mc-red">
+          <div class="module-icon">🚛</div>
+          <div class="module-title">Fleet management</div>
+          <div class="module-desc">Vehicle list, capacity, status<br>Maintenance schedule<br>Fuel level per tanker</div>
+          <button class="module-btn" onclick="showPage('fleet',null)">Manage Fleet →</button>
+        </div>
+        <div class="module-card mc-indigo">
+          <div class="module-icon">💰</div>
+          <div class="module-title">People Who Paid</div>
+          <div class="module-desc">All confirmed payments<br>Customer name, amount, fuel<br>Date, method &amp; order details</div>
+          <button class="module-btn" onclick="showPage('payments',null)">View Paid Orders &#x2192;</button>
+        </div>
+
+        <div class="module-card" style="background:linear-gradient(135deg,#10b981,#059669)">
+          <div class="module-icon">🏷</div>
+          <div class="module-title">Pricing management</div>
+          <div class="module-desc">Set fuel price per litre<br>Delivery fare by area / zone<br>Surge / discount pricing</div>
+          <button class="module-btn" onclick="showPage('pricing',null)">Manage Pricing →</button>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="settings-title">⚙ Settings & configuration</div>
+        <div class="settings-links">
+          <span class="settings-link" onclick="showPage('settings',null)">User roles & permissions</span>
+          <span class="settings-link" onclick="showPage('settings',null)">Service zones</span>
+          <span class="settings-link" onclick="showPage('settings',null)">App settings</span>
+          <span class="settings-link" onclick="showPage('settings',null)">SMS/email templates</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ ORDERS ══════════════════════════════════════ -->
+    <div id="page-orders" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">📦 Order Management</div>
+          <div class="page-subtitle" id="orders-page-subtitle">Loading orders...</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('order')">+ New Order</button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--orange-light)">🆕</div>
+          <div><div class="stat-val" style="color:var(--orange)" id="stat-pending">—</div><div class="stat-lbl">Pending</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--blue-light)">🚛</div>
+          <div><div class="stat-val" style="color:var(--blue)" id="stat-transit">—</div><div class="stat-lbl">In-Transit</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--green-light)">✅</div>
+          <div><div class="stat-val" style="color:var(--green)" id="stat-delivered">—</div><div class="stat-lbl">Delivered</div></div>
+        </div>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-box">🔍 <input type="text" placeholder="Search orders by ID, customer, driver..." oninput="filterTable('orders-table', this.value)"></div>
+        <select class="filter-select" onchange="showToast('🔍 Filter applied: '+this.value)">
+          <option>All Status</option>
+          <option>New</option>
+          <option>Assigned</option>
+          <option>In-Transit</option>
+          <option>Delivered</option>
+          <option>Cancelled</option>
+        </select>
+        <select class="filter-select" onchange="showToast('📅 Date filter: '+this.value)">
+          <option>Today</option>
+          <option>This Week</option>
+          <option>This Month</option>
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="showToast('📥 Exporting orders...')">📥 Export</button>
+      </div>
+
+      <div class="table-card">
+        <div class="table-wrapper">
+          <table id="orders-table">
+            <thead><tr>
+              <th>#Order ID</th><th>Customer</th><th>Location</th><th>Payment Mode</th><th>Fuel Type</th><th>Qty (L)</th><th>Amount</th><th>Status</th><th>Time</th><th>Actions</th>
+            </tr></thead>
+           
+          </table>
+        </div>
+        <div class="table-footer">
+        
+          <div class="pagination">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ DRIVERS ══════════════════════════════════════ -->
+    <div id="page-drivers" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">👤 Driver Management</div>
+          <div class="page-subtitle" id="drivers-subtitle">Loading drivers...</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('driver')">+ Add Driver</button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--green-light)">✅</div>
+          <div><div class="stat-val" style="color:var(--green)" id="drv-active">—</div><div class="stat-lbl">Active Drivers</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:#f1f5f9">⏸</div>
+          <div><div class="stat-val" id="drv-break">—</div><div class="stat-lbl">On Break</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--red-light)">❌</div>
+          <div><div class="stat-val" style="color:var(--red)" id="drv-offline">—</div><div class="stat-lbl">Inactive</div></div>
+        </div>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-box">🔍 <input type="text" id="drv-search" placeholder="Search by name, phone, vehicle..." oninput="filterDriversTable(this.value)"></div>
+        <select class="filter-select" id="drv-status-filter" onchange="filterDriversTable(document.getElementById('drv-search').value)">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="on-break">On Break</option>
+          <option value="inactive">Inactive</option>
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="exportDriversCSV()">📥 Export</button>
+      </div>
+
+      <div class="table-card">
+        <div class="table-wrapper">
+          <table id="drivers-table">
+            <thead><tr>
+              <th>Driver</th><th>Phone</th><th>Email</th><th>Vehicle</th><th>Plate No.</th><th>Location</th><th>Deliveries</th><th>Status</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="drv-tbody">
+              <tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-muted)">⏳ Loading drivers...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span id="drv-count-label">Loading...</span>
+          <div class="pagination" id="drv-pagination"></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════ USERS ══════════════════════════════════════ -->
+    <div id="page-users" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">🧑‍💻 User Management</div>
+          <div class="page-subtitle" id="users-subtitle">Loading registered users...</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="loadUsers()">🔄 Refresh</button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--blue-light)">🧑‍💻</div>
+          <div><div class="stat-val" style="color:var(--blue)" id="users-total">—</div><div class="stat-lbl">Total Users</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--green-light)">📧</div>
+          <div><div class="stat-val" style="color:var(--green)" id="users-with-email">—</div><div class="stat-lbl">With Email</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--orange-light)">📱</div>
+          <div><div class="stat-val" style="color:var(--orange)" id="users-with-phone">—</div><div class="stat-lbl">With Phone</div></div>
+        </div>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-box">🔍 <input type="text" id="users-search" placeholder="Search users by name, email, phone..." oninput="filterUsersTable(this.value)"></div>
+        <button class="btn btn-outline btn-sm" onclick="exportUsers()">📥 Export</button>
+      </div>
+
+      <div class="table-card">
+        <div class="table-wrapper">
+          <table id="users-table">
+            <thead><tr>
+              <th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="users-tbody">
+              <tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">⏳ Loading users...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span id="users-count-label">Loading...</span>
+          <div class="pagination" id="users-pagination"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ INVENTORY ══════════════════════════════════════ -->
+    <div id="page-inventory" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">🗃 Fuel Inventory</div>
+          <div class="page-subtitle">3 fuel types · Low stock alert on Diesel</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('inventory')">+ Restock Request</button>
+      </div>
+
+      <div class="alert-banner alert-banner-err">🚨 Diesel stock critically low at 26%. Immediate restock required!</div>
+
+      <div class="stats-row">
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--green-light)">⛽</div>
+          <div><div class="stat-val" style="color:var(--green)">12,500L</div><div class="stat-lbl">Petrol Stock</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--red-light)">🛢</div>
+          <div><div class="stat-val" style="color:var(--red)">3,200L</div><div class="stat-lbl">Diesel Stock</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--blue-light)">💨</div>
+          <div><div class="stat-val" style="color:var(--blue)">8,900kg</div><div class="stat-lbl">CNG Stock</div></div>
+        </div>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-box">🔍 <input type="text" placeholder="Search inventory..." oninput="filterTable('inventory-table', this.value)"></div>
+        <button class="btn btn-outline btn-sm" onclick="showToast('📥 Exporting...')">📥 Export</button>
+      </div>
+
+      <div class="table-card">
+        <div class="table-wrapper">
+          <table id="inventory-table">
+            <thead><tr>
+              <th>Fuel Type</th><th>Current Stock</th><th>Capacity</th><th>Level</th><th>Unit Price</th><th>Supplier</th><th>Last Restocked</th><th>Status</th><th>Actions</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>⛽ Petrol (91)</strong></td>
+                <td>12,500 L</td><td>20,000 L</td>
+                <td><div class="inv-level"><div class="inv-bar"><div class="inv-fill" style="width:62.5%;background:var(--green)"></div></div><span style="font-size:12px;font-weight:600;color:var(--green)">62%</span></div></td>
+                <td>₹96/L</td><td>IndianOil</td><td>Apr 17, 2026</td>
+                <td><span class="badge badge-green">✅ Normal</span></td>
+                <td><div class="action-btns"><button class="action-btn ab-edit" onclick="openModal('inventory')">✏</button><button class="action-btn ab-view" onclick="showToast('📦 Restocking Petrol...')">🔄</button></div></td>
+              </tr>
+              <tr>
+                <td><strong>🛢 Diesel</strong></td>
+                <td>3,200 L</td><td>12,000 L</td>
+                <td><div class="inv-level"><div class="inv-bar"><div class="inv-fill" style="width:26%;background:var(--red)"></div></div><span style="font-size:12px;font-weight:600;color:var(--red)">26%</span></div></td>
+                <td>₹85/L</td><td>HPCL</td><td>Apr 12, 2026</td>
+                <td><span class="badge badge-red">⚠ Critical</span></td>
+                <td><div class="action-btns"><button class="action-btn ab-edit" onclick="openModal('inventory')">✏</button><button class="action-btn ab-view" onclick="showToast('🚨 Emergency Restock Requested!')">🔄</button></div></td>
+              </tr>
+              <tr>
+                <td><strong>💨 CNG</strong></td>
+                <td>8,900 kg</td><td>15,000 kg</td>
+                <td><div class="inv-level"><div class="inv-bar"><div class="inv-fill" style="width:59%;background:var(--blue)"></div></div><span style="font-size:12px;font-weight:600;color:var(--blue)">59%</span></div></td>
+                <td>₹78/kg</td><td>BPCL</td><td>Apr 16, 2026</td>
+                <td><span class="badge badge-green">✅ Normal</span></td>
+                <td><div class="action-btns"><button class="action-btn ab-edit" onclick="openModal('inventory')">✏</button><button class="action-btn ab-view" onclick="showToast('📦 Restocking CNG...')">🔄</button></div></td>
+              </tr>
+              <tr>
+                <td><strong>⛽ Petrol (95)</strong></td>
+                <td>4,100 L</td><td>8,000 L</td>
+                <td><div class="inv-level"><div class="inv-bar"><div class="inv-fill" style="width:51%;background:var(--orange)"></div></div><span style="font-size:12px;font-weight:600;color:var(--orange)">51%</span></div></td>
+                <td>₹104/L</td><td>IndianOil</td><td>Apr 15, 2026</td>
+                <td><span class="badge badge-orange">⚡ Medium</span></td>
+                <td><div class="action-btns"><button class="action-btn ab-edit" onclick="openModal('inventory')">✏</button><button class="action-btn ab-view" onclick="showToast('📦 Restocking Premium Petrol...')">🔄</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span>4 fuel types in inventory</span>
+          <button class="btn btn-primary btn-sm" onclick="openModal('inventory')">+ Add Fuel Type</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ FLEET ══════════════════════════════════════ -->
+    <div id="page-fleet" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">🚛 Fleet Management</div>
+          <div class="page-subtitle">18 vehicles · 12 active · 2 in maintenance</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('fleet')">+ Add Vehicle</button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--green-light)">🚛</div>
+          <div><div class="stat-val" style="color:var(--green)">12</div><div class="stat-lbl">Active Vehicles</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--orange-light)">🔧</div>
+          <div><div class="stat-val" style="color:var(--orange)">2</div><div class="stat-lbl">In Maintenance</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:#f1f5f9">⏸</div>
+          <div><div class="stat-val">4</div><div class="stat-lbl">Idle</div></div>
+        </div>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-box">🔍 <input type="text" placeholder="Search vehicles..." oninput="filterTable('fleet-table', this.value)"></div>
+        <select class="filter-select"><option>All Status</option><option>Active</option><option>Maintenance</option><option>Idle</option></select>
+        <button class="btn btn-outline btn-sm" onclick="showToast('📥 Exporting...')">📥 Export</button>
+      </div>
+
+      <div class="table-card">
+        <div class="table-wrapper">
+          <table id="fleet-table">
+            <thead><tr>
+              <th>Vehicle</th><th>Plate No.</th><th>Capacity</th><th>Fuel Level</th><th>Driver</th><th>Last Service</th><th>KM Today</th><th>Status</th><th>Actions</th>
+            </tr></thead>
+            <tbody>
+              <tr><td><strong>🚛 Tanker T-01</strong></td><td>TN05 AB 1234</td><td>10,000 L</td><td><div class="inv-level"><div class="inv-bar"><div class="inv-fill" style="width:78%;background:var(--green)"></div></div><span style="font-size:11px;color:var(--green)">78%</span></div></td><td>Suresh D.</td><td>Apr 10, 2026</td><td>142 km</td><td><span class="badge badge-green">Active</span></td><td><div class="action-btns"><button class="action-btn ab-view" onclick="showToast('🚛 Tracking T-01...')">📍</button><button class="action-btn ab-edit" onclick="openModal('fleet')">✏</button><button class="action-btn ab-delete" onclick="deleteRow(this)">🗑</button></div></td></tr>
+              <tr><td><strong>🚛 Tanker T-02</strong></td><td>KA32 CD 5678</td><td>8,000 L</td><td><div class="inv-level"><div class="inv-bar"><div class="inv-fill" style="width:45%;background:var(--orange)"></div></div><span style="font-size:11px;color:var(--orange)">45%</span></div></td><td>Kiran M.</td><td>Apr 5, 2026</td><td>89 km</td><td><span class="badge badge-green">Active</span></td><td><div class="action-btns"><button class="action-btn ab-view" onclick="showToast('🚛 Tracking T-02...')">📍</button><button class="action-btn ab-edit" onclick="openModal('fleet')">✏</button><button class="action-btn ab-delete" onclick="deleteRow(this)">🗑</button></div></td></tr>
+              <tr><td><strong>🚛 Tanker T-03</strong></td><td>MH12 EF 9012</td><td>12,000 L</td><td><div class="inv-level"><div class="inv-bar"><div class="inv-fill" style="width:20%;background:var(--red)"></div></div><span style="font-size:11px;color:var(--red)">20%</span></div></td><td>—</td><td>Mar 28, 2026</td><td>0 km</td><td><span class="badge badge-orange">Maintenance</span></td><td><div class="action-btns"><button class="action-btn ab-view" onclick="showToast('🔧 T-03 in maintenance')">📍</button><button class="action-btn ab-edit" onclick="openModal('fleet')">✏</button><button class="action-btn ab-delete" onclick="deleteRow(this)">🗑</button></div></td></tr>
+              <tr><td><strong>🚛 Tanker T-04</strong></td><td>AP28 GH 3456</td><td>6,000 L</td><td><div class="inv-level"><div class="inv-bar"><div class="inv-fill" style="width:90%;background:var(--green)"></div></div><span style="font-size:11px;color:var(--green)">90%</span></div></td><td>Anand V.</td><td>Apr 14, 2026</td><td>210 km</td><td><span class="badge badge-green">Active</span></td><td><div class="action-btns"><button class="action-btn ab-view" onclick="showToast('🚛 Tracking T-04...')">📍</button><button class="action-btn ab-edit" onclick="openModal('fleet')">✏</button><button class="action-btn ab-delete" onclick="deleteRow(this)">🗑</button></div></td></tr>
+              <tr><td><strong>🚛 Tanker T-05</strong></td><td>TN07 IJ 7890</td><td>9,000 L</td><td><div class="inv-level"><div class="inv-bar"><div class="inv-fill" style="width:55%;background:var(--blue)"></div></div><span style="font-size:11px;color:var(--blue)">55%</span></div></td><td>—</td><td>Apr 18, 2026</td><td>0 km</td><td><span class="badge badge-gray">Idle</span></td><td><div class="action-btns"><button class="action-btn ab-view" onclick="showToast('🚛 T-05 is idle')">📍</button><button class="action-btn ab-edit" onclick="openModal('fleet')">✏</button><button class="action-btn ab-delete" onclick="deleteRow(this)">🗑</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span>Showing 5 of 18 vehicles</span>
+          <div class="pagination">
+            <button class="page-btn active">1</button>
+            <button class="page-btn" onclick="showToast('📄 Page 2')">2</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-payments" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">💰 People Who Paid</div>
+          <div class="page-subtitle" id="paid-subtitle">Loading payment records...</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm" onclick="loadPaidOrders()">🔄 Refresh</button>
+          <button class="btn btn-primary btn-sm" onclick="exportPaidCSV()">📥 Export CSV</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--green-light)">💰</div>
+          <div><div class="stat-val" style="color:var(--green)" id="paid-total-revenue">—</div><div class="stat-lbl">Total Collected</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--blue-light)">👥</div>
+          <div><div class="stat-val" style="color:var(--blue)" id="paid-count">—</div><div class="stat-lbl">Paid Orders</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--orange-light)">⛽</div>
+          <div><div class="stat-val" style="color:var(--orange)" id="paid-avg">—</div><div class="stat-lbl">Avg Amount</div></div>
+        </div>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-box">🔍 <input type="text" id="paid-search" placeholder="Search by name, order, fuel type..." oninput="filterPaidTable(this.value)"></div>
+        <select class="filter-select" id="paid-fuel-filter" onchange="filterPaidTable(document.getElementById('paid-search').value)">
+          <option value="">All Fuel Types</option>
+          <option value="Petrol">Petrol</option>
+          <option value="Diesel">Diesel</option>
+          <option value="CNG">CNG</option>
+        </select>
+      </div>
+
+      <div class="table-card">
+        <div class="table-wrapper">
+          <table id="paid-table">
+            <thead><tr>
+              <th>#</th><th>Customer</th><th>Order</th><th>Fuel</th><th>Qty</th><th>Amount Paid</th><th>Method</th><th>Date & Time</th>
+            </tr></thead>
+            <tbody id="paid-tbody">
+              <tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted)">⏳ Loading paid orders...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span id="paid-count-label">Loading...</span>
+          <div class="pagination" id="paid-pagination"></div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- ══════════════════════════════════════ PRICING ══════════════════════════════════════ -->
+    <div id="page-pricing" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">🏷 Pricing Management</div>
+          <div class="page-subtitle">Set fuel prices, delivery fares & surge pricing by zone</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('pricing')">+ Add Price Rule</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px">
+        <!-- Fuel Prices -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">⛽ Current Fuel Prices</div>
+            <button class="btn btn-outline btn-sm" onclick="openModal('pricing')">✏ Edit All</button>
+          </div>
+          <div class="price-zone-card">
+            <div><div class="price-zone-name">⛽ Petrol (91 Octane)</div><div class="price-zone-meta">IndianOil · Updated Apr 19</div></div>
+            <div><div class="price-zone-rate">₹96/L</div><button class="btn btn-outline btn-sm" style="margin-top:4px" onclick="openModal('pricing')">Edit</button></div>
+          </div>
+          <div class="price-zone-card">
+            <div><div class="price-zone-name">⛽ Petrol (95 Premium)</div><div class="price-zone-meta">IndianOil · Updated Apr 19</div></div>
+            <div><div class="price-zone-rate">₹104/L</div><button class="btn btn-outline btn-sm" style="margin-top:4px" onclick="openModal('pricing')">Edit</button></div>
+          </div>
+          <div class="price-zone-card">
+            <div><div class="price-zone-name">🛢 Diesel</div><div class="price-zone-meta">HPCL · Updated Apr 19</div></div>
+            <div><div class="price-zone-rate">₹85/L</div><button class="btn btn-outline btn-sm" style="margin-top:4px" onclick="openModal('pricing')">Edit</button></div>
+          </div>
+          <div class="price-zone-card">
+            <div><div class="price-zone-name">💨 CNG</div><div class="price-zone-meta">BPCL · Updated Apr 19</div></div>
+            <div><div class="price-zone-rate">₹78/kg</div><button class="btn btn-outline btn-sm" style="margin-top:4px" onclick="openModal('pricing')">Edit</button></div>
+          </div>
+        </div>
+
+        <!-- Delivery Fares -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">🚛 Delivery Fares by Zone</div>
+            <button class="btn btn-outline btn-sm" onclick="openModal('pricing')">+ Add Zone</button>
+          </div>
+          <div class="price-zone-card">
+            <div><div class="price-zone-name">📍 Zone A — Central</div><div class="price-zone-meta">0–5 km radius</div></div>
+            <div><div class="price-zone-rate">₹49</div><div style="font-size:11px;color:var(--text-muted);text-align:right">flat fee</div></div>
+          </div>
+          <div class="price-zone-card">
+            <div><div class="price-zone-name">📍 Zone B — Inner</div><div class="price-zone-meta">5–15 km radius</div></div>
+            <div><div class="price-zone-rate">₹89</div><div style="font-size:11px;color:var(--text-muted);text-align:right">flat fee</div></div>
+          </div>
+          <div class="price-zone-card">
+            <div><div class="price-zone-name">📍 Zone C — Outer</div><div class="price-zone-meta">15–30 km radius</div></div>
+            <div><div class="price-zone-rate">₹149</div><div style="font-size:11px;color:var(--text-muted);text-align:right">flat fee</div></div>
+          </div>
+          <div class="price-zone-card" style="border-color:var(--orange);background:#fff7ed">
+            <div><div class="price-zone-name">⚡ Surge Pricing</div><div class="price-zone-meta" style="color:var(--orange)">Active · Peak hours 6–9 PM</div></div>
+            <div><div class="price-zone-rate" style="color:var(--orange)">+25%</div><button class="btn btn-outline btn-sm" style="margin-top:4px;border-color:var(--orange);color:var(--orange)" onclick="showToast('⚡ Surge pricing toggled')">Toggle</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing Table -->
+      <div class="table-card">
+        <div style="padding:16px 20px;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;border-bottom:1px solid var(--border)">📋 All Pricing Rules</div>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Rule Name</th><th>Fuel Type</th><th>Zone</th><th>Price</th><th>Discount</th><th>Valid Until</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Standard Petrol</strong></td><td>Petrol 91</td><td>All Zones</td><td>₹96/L</td><td>—</td><td>Ongoing</td><td><span class="badge badge-green">Active</span></td><td><div class="action-btns"><button class="action-btn ab-edit" onclick="openModal('pricing')">✏</button><button class="action-btn ab-delete" onclick="deleteRow(this)">🗑</button></div></td></tr>
+              <tr><td><strong>Festival Discount</strong></td><td>All Fuels</td><td>All Zones</td><td>Market</td><td>5% OFF</td><td>Apr 30, 2026</td><td><span class="badge badge-green">Active</span></td><td><div class="action-btns"><button class="action-btn ab-edit" onclick="openModal('pricing')">✏</button><button class="action-btn ab-delete" onclick="deleteRow(this)">🗑</button></div></td></tr>
+              <tr><td><strong>Corporate Rate</strong></td><td>Diesel</td><td>Zone A, B</td><td>₹81/L</td><td>4.7% OFF</td><td>Dec 31, 2026</td><td><span class="badge badge-blue">Corporate</span></td><td><div class="action-btns"><button class="action-btn ab-edit" onclick="openModal('pricing')">✏</button><button class="action-btn ab-delete" onclick="deleteRow(this)">🗑</button></div></td></tr>
+              <tr><td><strong>Peak Surge</strong></td><td>All Fuels</td><td>All Zones</td><td>+25%</td><td>—</td><td>Daily 6–9 PM</td><td><span class="badge badge-orange">Conditional</span></td><td><div class="action-btns"><button class="action-btn ab-edit" onclick="openModal('pricing')">✏</button><button class="action-btn ab-delete" onclick="deleteRow(this)">🗑</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ REPORTS ══════════════════════════════════════ -->
+    <div id="page-reports" class="page" data-loaded="false">
+      <div class="page-header">
+        <div>
+          <div class="page-title">📊 Reports & Analytics</div>
+          <div class="page-subtitle">Overview for April 2026</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <select class="filter-select"><option>This Month</option><option>Last Month</option><option>This Year</option></select>
+          <button class="btn btn-primary" onclick="showToast('📥 Generating PDF report...')">📥 Export PDF</button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Row -->
+      <div class="stats-row" style="grid-template-columns:repeat(4,1fr)">
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--green-light)">💰</div>
+          <div><div class="stat-val" style="color:var(--green)" id="rpt-total-revenue">—</div><div class="stat-lbl">Total Revenue</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--blue-light)">📦</div>
+          <div><div class="stat-val" style="color:var(--blue)" id="rpt-total-orders">—</div><div class="stat-lbl">Total Orders</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--green-light)">✅</div>
+          <div><div class="stat-val" style="color:var(--green)" id="rpt-delivered">—</div><div class="stat-lbl">Delivered</div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-icon" style="background:var(--purple)" style="color:#fff">👥</div>
+          <div><div class="stat-val" style="color:var(--purple)" id="rpt-customers">—</div><div class="stat-lbl">Customers</div></div>
+        </div>
+      </div>
+
+      <div class="report-grid">
+        <!-- Orders by Status -->
+        <div class="chart-card">
+          <div class="chart-title" style="margin-bottom:16px">📦 Orders by Status</div>
+          <div id="rpt-status-chart" style="display:flex;flex-direction:column;gap:10px">
+            <div style="text-align:center;padding:30px;color:var(--text-muted)">⏳ Loading...</div>
+          </div>
+        </div>
+
+        <!-- Top Drivers -->
+        <div class="chart-card">
+          <div class="chart-title" style="margin-bottom:16px">🏆 Top Performing Drivers</div>
+          <div id="rpt-top-drivers">
+            <div style="text-align:center;padding:30px;color:var(--text-muted)">⏳ Loading...</div>
+          </div>
+        </div>
+
+        <!-- Revenue by Fuel -->
+        <div class="chart-card">
+          <div class="chart-title" style="margin-bottom:16px">⛽ Revenue by Fuel Type</div>
+          <div id="rpt-fuel-revenue" style="display:flex;flex-direction:column;gap:12px">
+            <div style="text-align:center;padding:30px;color:var(--text-muted)">⏳ Loading...</div>
+          </div>
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between">
+            <span style="font-size:13px;color:var(--text-secondary)">Total (Delivered)</span>
+            <strong style="font-family:'Syne',sans-serif;font-size:20px" id="rpt-fuel-total">—</strong>
+          </div>
+        </div>
+
+        <!-- Order Status Breakdown -->
+        <div class="chart-card">
+          <div class="chart-title" style="margin-bottom:16px">📊 Order Breakdown</div>
+          <div id="rpt-breakdown" style="display:flex;flex-direction:column;gap:10px">
+            <div style="text-align:center;padding:30px;color:var(--text-muted)">⏳ Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ SETTINGS ══════════════════════════════════════ -->
+    <div id="page-settings" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">⚙ Settings & Configuration</div>
+          <div class="page-subtitle">Manage system settings, roles, and preferences</div>
+        </div>
+        <button class="btn btn-primary" onclick="showToast('💾 Settings saved!')">💾 Save All Changes</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <!-- General Settings -->
+        <div class="settings-section">
+          <div class="settings-section-title">🌐 General Settings</div>
+          <div class="form-group" style="margin-bottom:14px">
+            <label>Business Name</label>
+            <input type="text" value="FuelGo Delivery Systems">
+          </div>
+          <div class="form-group" style="margin-bottom:14px">
+            <label>Admin Email</label>
+            <input type="email" value="admin@fuelgo.in">
+          </div>
+          <div class="form-group" style="margin-bottom:14px">
+            <label>Support Phone</label>
+            <input type="tel" value="+91 9876543210">
+          </div>
+          <div class="form-group">
+            <label>Time Zone</label>
+            <select><option>Asia/Kolkata (IST)</option><option>UTC</option></select>
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="settings-section">
+          <div class="settings-section-title">🔔 Notifications</div>
+          <div class="toggle-row">
+            <div class="toggle-info"><div class="toggle-label">Order Alerts</div><div class="toggle-desc">Alert on new & cancelled orders</div></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><div class="toggle-label">Low Inventory Alerts</div><div class="toggle-desc">Alert when fuel stock < 30%</div></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><div class="toggle-label">Driver Location Updates</div><div class="toggle-desc">Live GPS ping every 30s</div></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><div class="toggle-label">Payment Notifications</div><div class="toggle-desc">Alert on success/failure</div></div>
+            <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><div class="toggle-label">Daily Report Email</div><div class="toggle-desc">Send EOD summary at 11 PM</div></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+
+        <!-- Service Zones -->
+        <div class="settings-section">
+          <div class="settings-section-title">📍 Service Zones</div>
+          <div class="price-zone-card">
+            <div><div class="price-zone-name">Zone A — Central</div><div class="price-zone-meta">Mysuru city center · 0–5 km</div></div>
+            <div class="action-btns"><button class="action-btn ab-edit" onclick="showToast('✏ Editing Zone A')">✏</button><button class="action-btn ab-delete" onclick="showToast('🗑 Deleting Zone A')">🗑</button></div>
+          </div>
+          <div class="price-zone-card">
+            <div><div class="price-zone-name">Zone B — Inner Ring</div><div class="price-zone-meta">Inner suburbs · 5–15 km</div></div>
+            <div class="action-btns"><button class="action-btn ab-edit" onclick="showToast('✏ Editing Zone B')">✏</button><button class="action-btn ab-delete" onclick="showToast('🗑 Deleting Zone B')">🗑</button></div>
+          </div>
+          <div class="price-zone-card">
+            <div><div class="price-zone-name">Zone C — Outer</div><div class="price-zone-meta">Outer suburbs · 15–30 km</div></div>
+            <div class="action-btns"><button class="action-btn ab-edit" onclick="showToast('✏ Editing Zone C')">✏</button><button class="action-btn ab-delete" onclick="showToast('🗑 Deleting Zone C')">🗑</button></div>
+          </div>
+          <button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="showToast('➕ Adding new zone...')">+ Add Zone</button>
+        </div>
+
+        <!-- User Roles -->
+        <div class="settings-section">
+          <div class="settings-section-title">👤 User Roles & Permissions</div>
+          <table style="width:100%">
+            <thead><tr><th>Role</th><th>Users</th><th>Access</th><th></th></tr></thead>
+            <tbody>
+              <tr><td><strong>Super Admin</strong></td><td>1</td><td><span class="badge badge-red">Full Access</span></td><td><button class="action-btn ab-edit" onclick="showToast('✏ Editing role')">✏</button></td></tr>
+              <tr><td><strong>Manager</strong></td><td>3</td><td><span class="badge badge-orange">Moderate</span></td><td><button class="action-btn ab-edit" onclick="showToast('✏ Editing role')">✏</button></td></tr>
+              <tr><td><strong>Dispatcher</strong></td><td>5</td><td><span class="badge badge-blue">Orders Only</span></td><td><button class="action-btn ab-edit" onclick="showToast('✏ Editing role')">✏</button></td></tr>
+              <tr><td><strong>Driver</strong></td><td>32</td><td><span class="badge badge-gray">App Only</span></td><td><button class="action-btn ab-edit" onclick="showToast('✏ Editing role')">✏</button></td></tr>
+            </tbody>
+          </table>
+          <button class="btn btn-outline btn-sm" style="margin-top:12px" onclick="showToast('➕ Adding new role...')">+ Add Role</button>
+        </div>
+
+        <!-- SMS/Email Templates -->
+        <div class="settings-section" style="grid-column:1/-1">
+          <div class="settings-section-title">📧 SMS / Email Templates</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+            <div style="border:1.5px solid var(--border);border-radius:10px;padding:14px">
+              <div style="font-weight:600;font-size:13px;margin-bottom:6px">📱 Order Confirmation</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px">Sent when order is placed</div>
+              <button class="btn btn-outline btn-sm" onclick="showToast('✏ Editing Order Confirmation template')">✏ Edit Template</button>
+            </div>
+            <div style="border:1.5px solid var(--border);border-radius:10px;padding:14px">
+              <div style="font-weight:600;font-size:13px;margin-bottom:6px">🚛 Driver Assigned</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px">Sent when driver is assigned</div>
+              <button class="btn btn-outline btn-sm" onclick="showToast('✏ Editing Driver Assigned template')">✏ Edit Template</button>
+            </div>
+            <div style="border:1.5px solid var(--border);border-radius:10px;padding:14px">
+              <div style="font-weight:600;font-size:13px;margin-bottom:6px">✅ Delivery Complete</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px">Sent on successful delivery</div>
+              <button class="btn btn-outline btn-sm" onclick="showToast('✏ Editing Delivery Complete template')">✏ Edit Template</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ══════════════════════════════════════ MODALS ══════════════════════════════════════ -->
+
+<!-- Order Modal -->
+<div class="modal-overlay" id="modal-order">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📦 Create New Order</div>
+      <button class="modal-close" onclick="closeModal('order')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Customer Name</label><input type="text" placeholder="Enter customer name"></div>
+      <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+91 XXXXX XXXXX"></div>
+      <div class="form-group"><label>Fuel Type</label><select><option>Petrol (91)</option><option>Petrol (95)</option><option>Diesel</option><option>CNG</option></select></div>
+      <div class="form-group"><label>Quantity (Litres)</label><input type="number" placeholder="e.g. 50"></div>
+      <div class="form-group"><label>Assign Driver</label><select><option>Auto-assign</option><option>Suresh D.</option><option>Kiran M.</option><option>Anand V.</option></select></div>
+      <div class="form-group"><label>Zone</label><select><option>Zone A — Central</option><option>Zone B — Inner</option><option>Zone C — Outer</option></select></div>
+      <div class="form-group"><label>Payment Method</label><select><option>Online (Razorpay)</option><option>UPI</option><option>Cash</option><option>Wallet</option></select></div>
+      <div class="form-group"><label>Priority</label><select><option>Normal</option><option>Urgent</option><option>Scheduled</option></select></div>
+      <div class="form-group full"><label>Delivery Address</label><textarea placeholder="Full delivery address..."></textarea></div>
+      <div class="form-group full"><label>Special Instructions</label><input type="text" placeholder="Any special notes..."></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('order')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveForm('order')">📦 Create Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- Driver Modal -->
+<div class="modal-overlay" id="modal-driver">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">👤 Add New Driver</div>
+      <button class="modal-close" onclick="closeModal('driver')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Full Name *</label><input type="text" id="drv-name" placeholder="Driver full name"></div>
+      <div class="form-group"><label>Phone Number *</label><input type="tel" id="drv-phone" placeholder="+91 XXXXX XXXXX"></div>
+      <div class="form-group"><label>Email *</label><input type="email" id="drv-email" placeholder="driver@email.com"></div>
+      <div class="form-group"><label>License Number</label><input type="text" id="drv-license" placeholder="DL-XXXXXXXXXX (auto if blank)"></div>
+      <div class="form-group"><label>Vehicle Type</label>
+        <select id="drv-vehicle">
+          <option value="Bike">Bike</option>
+          <option value="Auto">Auto</option>
+          <option value="Van">Van</option>
+          <option value="Truck">Truck</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Vehicle Plate</label><input type="text" id="drv-plate" placeholder="TN05 AB 1234"></div>
+      <div class="form-group"><label>Location / Zone</label><input type="text" id="drv-location" placeholder="e.g. South, Zone A"></div>
+      <div class="form-group"><label>Status</label>
+        <select id="drv-status">
+          <option value="active">Active</option>
+          <option value="on-break">On Break</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('driver')">Cancel</button>
+      <button class="btn btn-primary" onclick="addDriverToAPI()">👤 Add Driver</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Customer Modal -->
+<div class="modal-overlay" id="modal-customer">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">👥 Add New Customer</div>
+      <button class="modal-close" onclick="closeModal('customer')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Full Name / Company</label><input type="text" placeholder="Customer name"></div>
+      <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+91 XXXXX XXXXX"></div>
+      <div class="form-group"><label>Email</label><input type="email" placeholder="customer@email.com"></div>
+      <div class="form-group"><label>Customer Type</label><select><option>Residential</option><option>Commercial</option><option>Industrial</option></select></div>
+      <div class="form-group"><label>Zone</label><select><option>Zone A</option><option>Zone B</option><option>Zone C</option></select></div>
+      <div class="form-group"><label>Preferred Fuel</label><select><option>Petrol</option><option>Diesel</option><option>CNG</option><option>All</option></select></div>
+      <div class="form-group full"><label>Delivery Address</label><textarea placeholder="Full delivery address..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('customer')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveForm('customer')">👥 Add Customer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Inventory Modal -->
+<div class="modal-overlay" id="modal-inventory">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🛢 Restock Request</div>
+      <button class="modal-close" onclick="closeModal('inventory')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Fuel Type</label><select><option>Petrol (91)</option><option>Petrol (95)</option><option>Diesel</option><option>CNG</option></select></div>
+      <div class="form-group"><label>Quantity to Order</label><input type="number" placeholder="e.g. 5000 litres"></div>
+      <div class="form-group"><label>Supplier</label><select><option>IndianOil</option><option>HPCL</option><option>BPCL</option><option>Other</option></select></div>
+      <div class="form-group"><label>Expected Delivery</label><input type="date"></div>
+      <div class="form-group"><label>Unit Price (₹)</label><input type="number" placeholder="Price per litre/kg"></div>
+      <div class="form-group"><label>Priority</label><select><option>Normal</option><option>Urgent</option><option>Emergency</option></select></div>
+      <div class="form-group full"><label>Notes</label><textarea placeholder="Additional notes for supplier..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('inventory')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveForm('inventory')">📦 Submit Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- Fleet Modal -->
+<div class="modal-overlay" id="modal-fleet">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🚛 Add New Vehicle</div>
+      <button class="modal-close" onclick="closeModal('fleet')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Vehicle Name</label><input type="text" placeholder="e.g. Tanker T-06"></div>
+      <div class="form-group"><label>Plate Number</label><input type="text" placeholder="KA01 AB 1234"></div>
+      <div class="form-group"><label>Capacity (Litres)</label><input type="number" placeholder="e.g. 10000"></div>
+      <div class="form-group"><label>Vehicle Type</label><select><option>Tanker</option><option>Mini Tanker</option><option>Truck</option></select></div>
+      <div class="form-group"><label>Assign Driver</label><select><option>Unassigned</option><option>Suresh D.</option><option>Kiran M.</option><option>Anand V.</option></select></div>
+      <div class="form-group"><label>Current Fuel Level (%)</label><input type="number" placeholder="e.g. 80" min="0" max="100"></div>
+      <div class="form-group"><label>Last Service Date</label><input type="date"></div>
+      <div class="form-group"><label>Next Service Due</label><input type="date"></div>
+      <div class="form-group full"><label>Notes</label><input type="text" placeholder="Any additional notes..."></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('fleet')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveForm('fleet')">🚛 Add Vehicle</button>
+    </div>
+  </div>
+</div>
+
+<!-- Pricing Modal -->
+<div class="modal-overlay" id="modal-pricing">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🏷 Add / Edit Price Rule</div>
+      <button class="modal-close" onclick="closeModal('pricing')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Rule Name</label><input type="text" placeholder="e.g. Standard Petrol Rate"></div>
+      <div class="form-group"><label>Fuel Type</label><select><option>All Fuels</option><option>Petrol (91)</option><option>Petrol (95)</option><option>Diesel</option><option>CNG</option></select></div>
+      <div class="form-group"><label>Zone</label><select><option>All Zones</option><option>Zone A</option><option>Zone B</option><option>Zone C</option></select></div>
+      <div class="form-group"><label>Base Price (₹/L)</label><input type="number" placeholder="e.g. 96"></div>
+      <div class="form-group"><label>Delivery Charge (₹)</label><input type="number" placeholder="e.g. 49"></div>
+      <div class="form-group"><label>Discount (%)</label><input type="number" placeholder="e.g. 5" min="0" max="100"></div>
+      <div class="form-group"><label>Surge Multiplier</label><input type="number" placeholder="e.g. 1.25" step="0.05"></div>
+      <div class="form-group"><label>Valid Until</label><input type="date"></div>
+      <div class="form-group full"><label>Description</label><input type="text" placeholder="Brief description of this pricing rule..."></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('pricing')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveForm('pricing')">💾 Save Rule</button>
+    </div>
+  </div>
+</div>
+
+<!-- Map Modal -->
+<div class="modal-overlay" id="modal-map">
+  <div class="modal" style="width:700px;max-width:95vw">
+    <div class="modal-header">
+      <div class="modal-title">🗺 Live Delivery Map</div>
+      <button class="modal-close" onclick="closeModal('map')">✕</button>
+    </div>
+    <div class="map-placeholder">
+      🗺
+      <p>Live GPS tracking map — Integrate Google Maps API here</p>
+      <p style="font-size:12px" id="map-summary">Loading live data...</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div style="background:var(--green-light);border-radius:10px;padding:12px;text-align:center"><div style="font-weight:700;color:var(--green);font-size:20px;font-family:'Syne',sans-serif" id="map-drivers">—</div><div style="font-size:12px;color:var(--text-secondary)">Active Drivers</div></div>
+      <div style="background:var(--blue-light);border-radius:10px;padding:12px;text-align:center"><div style="font-weight:700;color:var(--blue);font-size:20px;font-family:'Syne',sans-serif" id="map-deliveries">—</div><div style="font-size:12px;color:var(--text-secondary)">Active Deliveries</div></div>
+      <div style="background:var(--orange-light);border-radius:10px;padding:12px;text-align:center"><div style="font-weight:700;color:var(--orange);font-size:20px;font-family:'Syne',sans-serif" id="map-pending">—</div><div style="font-size:12px;color:var(--text-secondary)">Pending Pickup</div></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('map')">Close</button>
+      <button class="btn btn-primary" onclick="showToast('🗺 Opening full-screen map...')">🗺 Full Screen</button>
+    </div>
+  </div>
+</div>
+
+<!-- View Order Modal -->
+<div class="modal-overlay" id="modal-view-order">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="view-order-title">📦 Order Details</div>
+      <button class="modal-close" onclick="closeModal('view-order')">✕</button>
+    </div>
+    <div id="view-order-body">
+      <div style="background:var(--blue-light);border-radius:10px;padding:14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:18px" id="view-order-id">#ORD-1041</div><div style="font-size:12px;color:var(--text-secondary)">Placed at 10:32 AM · Apr 19, 2026</div></div>
+        <span class="badge badge-blue" id="view-order-status">🚛 In-Transit</span>
+      </div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot" style="background:var(--green-light)">✅</div><div class="tl-content"><div class="tl-title">Order Placed</div><div class="tl-time">10:32 AM</div><div class="tl-desc">Customer placed order for 50L Diesel</div></div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--blue-light)">👤</div><div class="tl-content"><div class="tl-title">Driver Assigned</div><div class="tl-time">10:35 AM</div><div class="tl-desc">Suresh D. accepted the delivery</div></div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--orange-light)">🚛</div><div class="tl-content"><div class="tl-title">In Transit</div><div class="tl-time">10:48 AM</div><div class="tl-desc">Driver en route to customer location</div></div></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('view-order')">Close</button>
+      <button class="btn btn-primary" onclick="showToast('✅ Order status updated'); closeModal('view-order')">Update Status</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toast-icon">✅</span>
+  <span id="toast-msg">Action completed</span>
+</div>
+
+<script>
+// ── DROPDOWNS ──
+function toggleDropdown(id) {
+  const panel = document.getElementById(id);
+  const isOpen = panel.classList.contains('open');
+  closeAllDropdowns();
+  if (!isOpen) panel.classList.add('open');
+}
+function closeAllDropdowns() {
+  document.querySelectorAll('.dropdown-panel').forEach(p => p.classList.remove('open'));
+}
+function markAllRead(dropdownId, badge) {
+  const panel = document.getElementById(dropdownId);
+  panel.querySelectorAll('.dp-item.unread').forEach(item => item.classList.remove('unread'));
+  panel.querySelectorAll('.dp-unread-dot').forEach(dot => dot.remove());
+  // zero out the badge
+  const btn = panel.closest('.dropdown-wrap').querySelector('.icon-badge');
+  if (btn) btn.textContent = '0';
+  showToast('✅ All ' + badge + ' messages marked as read');
+}
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.dropdown-wrap')) closeAllDropdowns();
+});
+
+// ── PAGE NAVIGATION ──
+function showPage(page, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (navEl) navEl.classList.add('active');
+  else {
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.textContent.toLowerCase().includes(page)) n.classList.add('active');
+    });
+  }
+  document.querySelectorAll('.topbar-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.topbar-btn').forEach(b => {
+    if (b.textContent.toLowerCase().includes(page)) b.classList.add('active');
+  });
+}
+
+// ── MODALS ──
+function openModal(type) {
+  document.getElementById('modal-' + type).classList.add('open');
+}
+function closeModal(type) {
+  document.getElementById('modal-' + type).classList.remove('open');
+}
+function showMapModal() { openModal('map'); }
+
+// Close modal on backdrop click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.classList.remove('open');
+    }
+  });
+});
+
+// ── FORM SAVE ──
+function saveForm(type) {
+  const msgs = {
+    order: '📦 Order created successfully!',
+    driver: '👤 Driver added successfully!',
+    customer: '👥 Customer added successfully!',
+    inventory: '📦 Restock request submitted!',
+    fleet: '🚛 Vehicle added successfully!',
+    pricing: '💾 Pricing rule saved!',
+  };
+  closeModal(type);
+  showToast(msgs[type] || '✅ Saved!');
+}
+
+// ── VIEW ORDER ──
+function viewOrder(id) {
+  document.getElementById('view-order-id').textContent = id;
+  openModal('view-order');
+}
+
+// ── DELETE ROW ──
+async function deleteRow(btn) {
+  if (!confirm('Are you sure you want to delete this record?')) return;
+
+  const row = btn.closest('tr');
+
+  // Get the MongoDB _id from the confirm button's onclick attribute
+  const confirmBtn = row.querySelector('.ab-edit');
+  const onclickAttr = confirmBtn ? confirmBtn.getAttribute('onclick') : '';
+  const match = onclickAttr ? onclickAttr.match(/confirmOrder\('([^']+)'/) : null;
+  const mongoId = match ? match[1] : null;
+
+  // If no mongoId found (e.g. static rows like drivers/fleet), just remove visually
+  if (!mongoId) {
+    row.style.transition = 'all 0.3s';
+    row.style.opacity = '0';
+    row.style.transform = 'translateX(20px)';
+    setTimeout(() => row.remove(), 300);
+    showToast('🗑 Record removed');
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`/api/orders/${mongoId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token || ''}` }
+    });
+
+    if (res.ok) {
+      row.style.transition = 'all 0.3s';
+      row.style.opacity = '0';
+      row.style.transform = 'translateX(20px)';
+      setTimeout(() => row.remove(), 300);
+      showToast('🗑 Order deleted successfully');
+    } else {
+      showToast('❌ Failed to delete — server error');
+    }
+  } catch (err) {
+    console.error('Delete error:', err);
+    showToast('❌ Network error while deleting');
+  }
+}
+
+// ── FILTER TABLE ──
+function filterTable(tableId, query) {
+  const rows = document.querySelectorAll('#' + tableId + ' tbody tr');
+  const q = query.toLowerCase();
+  rows.forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ── TOAST ──
+let toastTimeout;
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ── PAGINATION BUTTONS ──
+document.querySelectorAll('.pagination').forEach(pag => {
+  pag.addEventListener('click', function(e) {
+    if (e.target.classList.contains('page-btn')) {
+      pag.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+    }
+  });
+});
+
+// ── KEYBOARD SHORTCUT ──
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  }
+});
+
+// Welcome toast
+setTimeout(() => showToast('👋 Welcome back, Admin! 3 alerts need attention.'), 800);
+// ─────────────────────────────────────────────
+//  ADMIN DASHBOARD — Orders Loader
+//
+//  PASTE THIS entire block at the bottom of
+//  admin-dashboard.html, just BEFORE the
+//  
+// ─────────────────────────────────────────────
+
+// ── Load Real Orders from MongoDB ──
+async function loadOrders() {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res  = await fetch("/api/orders?limit=50&skip=0", {
+      headers: { "Authorization": `Bearer ${token || ""}` }
+    });
+    const data = await res.json();
+
+    if (!data.success) {
+      console.warn("Orders fetch failed:", data.message);
+      return;
+    }
+
+    // Find or create tbody
+    let tbody = document.querySelector("#orders-table tbody");
+    if (!tbody) {
+      tbody = document.createElement("tbody");
+      document.getElementById("orders-table").appendChild(tbody);
+    }
+
+    tbody.innerHTML = "";
+
+    if (!data.data || data.data.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="9" style="text-align:center; padding:30px; color:#999; font-size:14px;">
+            📦 No orders yet. Waiting for customers to place orders.
+          </td>
+        </tr>`;
+      return;
+    }
+
+    // Update the sidebar badge count
+    const badge = document.querySelector(".nav-badge");
+    if (badge) badge.textContent = data.total;
+
+    // Update subtitle
+    const subtitle = document.querySelector("#page-orders .page-subtitle");
+    if (subtitle) subtitle.textContent = `${data.total} total orders`;
+
+    // Render each order row
+    data.data.forEach(o => {
+      const statusBadge = {
+        "Pending":           `<span class="badge badge-orange">⏳ Pending</span>`,
+        "Confirmed":         `<span class="badge badge-blue">✅ Confirmed</span>`,
+        "Payment Completed": `<span class="badge badge-green">💳 Paid</span>`,
+        "In Transit":        `<span class="badge badge-purple">🚛 In Transit</span>`,
+        "Delivered":         `<span class="badge badge-green">✅ Delivered</span>`,
+        "Cancelled":         `<span class="badge badge-red">❌ Cancelled</span>`
+      }[o.status] || `<span class="badge badge-gray">${o.status}</span>`;
+
+      const time = new Date(o.createdAt).toLocaleTimeString("en-IN", {
+        hour: "2-digit", minute: "2-digit"
+      });
+
+      const shortId = o.orderNumber || ("#" + o._id.toString().slice(-6).toUpperCase());
+
+      tbody.innerHTML += `
+        <tr>
+          <td><strong>${shortId}</strong></td>
+          <td>${o.customerName  || "—"}</td>
+          <td>${o.location || "—"}</td>
+          <td>${o.paymentMethod || "—"}</td>
+          <td>${o.fuelType}</td>
+          <td>${o.quantity}L</td>
+          <td>${o.amount ? "₹" + o.amount : "—"}</td>
+          <td>${statusBadge}</td>
+          <td>${time}</td>
+          <td>
+            <div class="action-btns">
+              <button class="action-btn ab-view"
+                onclick="viewOrder('${shortId}')">👁</button>
+              <button class="action-btn ab-edit"
+                onclick="confirmOrder('${o._id}', this)">✅</button>
+              <button class="action-btn ab-delete"
+                onclick="deleteRow(this)">🗑</button>
+            </div>
+          </td>
+        </tr>`;
+    });
+
+  } catch (err) {
+    console.error("Failed to load orders:", err);
+  }
+}
+
+// ── Confirm an order from admin dashboard ──
+async function confirmOrder(orderId, btn) {
+  if (!confirm("Confirm this order?")) return;
+
+  try {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`/api/orders/${orderId}/status`, {
+      method:  "PATCH",
+      headers: {
+        "Content-Type":  "application/json",
+        "Authorization": `Bearer ${token || ""}`
+      },
+      body: JSON.stringify({ status: "Confirmed" })
+    });
+
+    if (res.ok) {
+      showToast("✅ Order confirmed!");
+      // Update badge in the row
+      const row = btn.closest("tr");
+      if (row) {
+        const statusTd = row.children[6];
+        statusTd.innerHTML = `<span class="badge badge-blue">✅ Confirmed</span>`;
+      }
+    } else {
+      showToast("❌ Failed to confirm order");
+    }
+  } catch (e) {
+    console.error(e);
+    showToast("❌ Server error");
+  }
+}
+
+// ── Auto-reload orders when Orders page is clicked ──
+// Wraps the existing showPage function
+// ── Users page logic ──
+let _allUsers = [];
+
+async function loadUsers() {
+  const tbody = document.getElementById("users-tbody");
+  tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">⏳ Loading users...</td></tr>`;
+  try {
+    const res = await fetch("/api/users");
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message || "Failed");
+    _allUsers = json.data || [];
+    renderUsersTable(_allUsers);
+    // Stats
+    document.getElementById("users-total").textContent = _allUsers.length;
+    document.getElementById("users-with-email").textContent = _allUsers.filter(u => u.email).length;
+    document.getElementById("users-with-phone").textContent = _allUsers.filter(u => u.phone).length;
+    document.getElementById("users-subtitle").textContent =
+      `${_allUsers.length} registered users on the platform`;
+    document.getElementById("users-count-label").textContent =
+      `Showing ${_allUsers.length} user${_allUsers.length !== 1 ? "s" : ""}`;
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--red)">❌ Failed to load users: ${err.message}</td></tr>`;
+    document.getElementById("users-subtitle").textContent = "Error loading users";
+  }
+}
+
+function renderUsersTable(users) {
+  const tbody = document.getElementById("users-tbody");
+  if (!users.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">👤 No users found</td></tr>`;
+    document.getElementById("users-count-label").textContent = "No users found";
+    return;
+  }
+  tbody.innerHTML = users.map((u, i) => {
+    const initials = (u.name || "?").split(" ").map(w => w[0]).join("").toUpperCase().slice(0,2);
+    const colors = ["#2563eb","#10b981","#f97316","#7c3aed","#ef4444","#0d9488","#4f46e5"];
+    const color = colors[i % colors.length];
+    return `<tr>
+      <td><strong>${i + 1}</strong></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:34px;height:34px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0">${initials}</div>
+          <div>
+            <div style="font-weight:600">${u.name || "—"}</div>
+            <div style="font-size:11px;color:var(--text-muted)">${u._id}</div>
+          </div>
+        </div>
+      </td>
+      <td>${u.email ? `<span style="color:var(--blue)">${u.email}</span>` : '<span style="color:var(--text-muted)">—</span>'}</td>
+      <td>${u.phone || '<span style="color:var(--text-muted)">—</span>'}</td>
+      <td>
+        <div class="action-btns">
+          <button class="action-btn ab-view" onclick="showToast('👁 User: ${(u.name||'').replace(/'/g,'')}')" title="View">👁</button>
+          <button class="action-btn ab-delete" onclick="deleteUser('${u._id}', this)" title="Delete">🗑</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+  document.getElementById("users-count-label").textContent =
+    `Showing ${users.length} of ${_allUsers.length} user${_allUsers.length !== 1 ? "s" : ""}`;
+}
+
+function filterUsersTable(query) {
+  const q = query.toLowerCase().trim();
+  if (!q) { renderUsersTable(_allUsers); return; }
+  const filtered = _allUsers.filter(u =>
+    (u.name || "").toLowerCase().includes(q) ||
+    (u.email || "").toLowerCase().includes(q) ||
+    (u.phone || "").toLowerCase().includes(q)
+  );
+  renderUsersTable(filtered);
+}
+
+async function deleteUser(id, btn) {
+  if (!confirm("Delete this user? This cannot be undone.")) return;
+  try {
+    const res = await fetch(`/api/users/${id}`, { method: "DELETE" });
+    const json = await res.json();
+    if (json.success) {
+      btn.closest("tr").remove();
+      _allUsers = _allUsers.filter(u => u._id !== id);
+      document.getElementById("users-total").textContent = _allUsers.length;
+      document.getElementById("users-count-label").textContent =
+        `Showing ${_allUsers.length} user${_allUsers.length !== 1 ? "s" : ""}`;
+      showToast("🗑 User deleted successfully");
+    } else {
+      showToast("❌ " + (json.message || "Delete failed"));
+    }
+  } catch (err) {
+    showToast("❌ Server error");
+  }
+}
+
+function exportUsers() {
+  if (!_allUsers.length) { showToast("⚠ No users to export"); return; }
+  const rows = [["#","Name","Email","Phone","ID"]];
+  _allUsers.forEach((u, i) => rows.push([i+1, u.name||"", u.email||"", u.phone||"", u._id]));
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const a = document.createElement("a");
+  a.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+  a.download = "fuelgo_users.csv";
+  a.click();
+  showToast("📥 Users exported as CSV");
+}
+
+(function patchShowPage() {
+  const _orig = window.showPage;
+  window.showPage = function(page, navEl) {
+    _orig(page, navEl);
+    if (page === "orders")   loadOrders();
+    if (page === "users")    loadUsers();
+    if (page === "payments") loadPaidOrders();
+    if (page === "drivers")  loadDrivers();
+  };
+})();
+
+// ── Paid Orders page logic ──
+let _allPaid = [];
+
+async function loadPaidOrders() {
+  const tbody = document.getElementById("paid-tbody");
+  if (!tbody) return;
+  tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted)">⏳ Loading paid orders...</td></tr>`;
+  try {
+    const res = await fetch("/api/orders/paid");
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message || "Failed");
+    _allPaid = json.data || [];
+    renderPaidTable(_allPaid);
+    // Stats
+    const total = _allPaid.reduce((s, o) => s + (o.amount || 0), 0);
+    const avg   = _allPaid.length ? Math.round(total / _allPaid.length) : 0;
+    document.getElementById("paid-total-revenue").textContent = "₹" + total.toLocaleString("en-IN");
+    document.getElementById("paid-count").textContent = _allPaid.length;
+    document.getElementById("paid-avg").textContent   = _allPaid.length ? "₹" + avg.toLocaleString("en-IN") : "—";
+    document.getElementById("paid-subtitle").textContent =
+      `${_allPaid.length} confirmed payment${_allPaid.length !== 1 ? "s" : ""} · ₹${total.toLocaleString("en-IN")} total collected`;
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--red)">❌ Failed to load: ${err.message}</td></tr>`;
+    document.getElementById("paid-subtitle").textContent = "Error loading payments";
+  }
+}
+
+function renderPaidTable(orders) {
+  const tbody = document.getElementById("paid-tbody");
+  if (!orders.length) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted)">💰 No paid orders yet</td></tr>`;
+    document.getElementById("paid-count-label").textContent = "No paid orders";
+    return;
+  }
+  const fuelColors = { "Petrol": "var(--blue)", "Diesel": "var(--orange)", "CNG": "var(--green)" };
+  tbody.innerHTML = orders.map((o, i) => {
+    const name = o.customerName || "—";
+    const ordNum = o.orderNumber || ("#" + o._id.toString().slice(-6).toUpperCase());
+    const dt = new Date(o.updatedAt || o.createdAt);
+    const dateStr = dt.toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"numeric" });
+    const timeStr = dt.toLocaleTimeString("en-IN", { hour:"2-digit", minute:"2-digit" });
+    const fuel = o.fuelType || "—";
+    const fuelColor = fuelColors[fuel] || "var(--text-secondary)";
+    const method = o.paymentMethod || "UPI";
+    const methodIcon = method.toLowerCase().includes("cash") ? "💵" : method.toLowerCase().includes("upi") ? "📱" : method.toLowerCase().includes("wallet") ? "👛" : "💳";
+    return `<tr>
+      <td><strong>${i+1}</strong></td>
+      <td>
+        <div style="font-weight:600">${name}</div>
+        ${o.customerPhone ? `<div style="font-size:11px;color:var(--text-muted)">${o.customerPhone}</div>` : ""}
+      </td>
+      <td><span style="font-family:'Syne',sans-serif;font-weight:700;color:var(--blue)">${ordNum}</span></td>
+      <td><span style="color:${fuelColor};font-weight:600">⛽ ${fuel}</span></td>
+      <td>${o.quantity || "—"} L</td>
+      <td><strong style="color:var(--green);font-size:15px">₹${(o.amount||0).toLocaleString("en-IN")}</strong></td>
+      <td>${methodIcon} ${method}</td>
+      <td><div style="font-size:12px">${dateStr}</div><div style="font-size:11px;color:var(--text-muted)">${timeStr}</div></td>
+    </tr>`;
+  }).join("");
+  document.getElementById("paid-count-label").textContent =
+    `Showing ${orders.length} of ${_allPaid.length} paid order${_allPaid.length !== 1 ? "s" : ""}`;
+}
+
+function filterPaidTable(query) {
+  const q = (query || "").toLowerCase().trim();
+  const fuelFilter = (document.getElementById("paid-fuel-filter") || {}).value || "";
+  let filtered = _allPaid;
+  if (fuelFilter) filtered = filtered.filter(o => (o.fuelType || "").includes(fuelFilter));
+  if (q) filtered = filtered.filter(o =>
+    (o.customerName || "").toLowerCase().includes(q) ||
+    (o.orderNumber  || "").toLowerCase().includes(q) ||
+    (o.fuelType     || "").toLowerCase().includes(q) ||
+    (o.customerPhone|| "").includes(q)
+  );
+  renderPaidTable(filtered);
+}
+
+function exportPaidCSV() {
+  if (!_allPaid.length) { showToast("⚠ No paid orders to export"); return; }
+  const rows = [["#","Customer","Phone","Order","Fuel","Qty(L)","Amount(₹)","Method","Date","Time"]];
+  _allPaid.forEach((o, i) => {
+    const dt = new Date(o.updatedAt || o.createdAt);
+    rows.push([
+      i+1,
+      o.customerName || "",
+      o.customerPhone || "",
+      o.orderNumber || o._id,
+      o.fuelType || "",
+      o.quantity || "",
+      o.amount || 0,
+      o.paymentMethod || "",
+      dt.toLocaleDateString("en-IN"),
+      dt.toLocaleTimeString("en-IN", { hour:"2-digit", minute:"2-digit" })
+    ]);
+  });
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const a = document.createElement("a");
+  a.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+  a.download = "fuelgo_paid_orders.csv";
+  a.click();
+  showToast("📥 Paid orders exported as CSV");
+}
+
+// ── Drivers page logic ──
+let _allDrivers = [];
+
+async function loadDrivers() {
+  const tbody = document.getElementById("drv-tbody");
+  if (!tbody) return;
+  tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-muted)">⏳ Loading drivers...</td></tr>`;
+  try {
+    const res = await fetch("/api/drivers");
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message || "Failed");
+    _allDrivers = json.data || [];
+    renderDriversTable(_allDrivers);
+    // Stats
+    const active   = _allDrivers.filter(d => d.status === "active").length;
+    const onBreak  = _allDrivers.filter(d => d.status === "on-break").length;
+    const inactive = _allDrivers.filter(d => d.status === "inactive" || d.status === "offline").length;
+    document.getElementById("drv-active").textContent  = active;
+    document.getElementById("drv-break").textContent   = onBreak;
+    document.getElementById("drv-offline").textContent = inactive;
+    document.getElementById("drivers-subtitle").textContent =
+      `${_allDrivers.length} driver${_allDrivers.length !== 1 ? "s" : ""} added by admin · ${active} active`;
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--red)">❌ Failed to load: ${err.message}</td></tr>`;
+    document.getElementById("drivers-subtitle").textContent = "Error loading drivers";
+  }
+}
+
+function renderDriversTable(drivers) {
+  const tbody = document.getElementById("drv-tbody");
+  if (!drivers.length) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-muted)">👤 No drivers added yet. Click "+ Add Driver" to add one.</td></tr>`;
+    document.getElementById("drv-count-label").textContent = "No drivers found";
+    return;
+  }
+  const colors = ["#2563eb","#10b981","#f97316","#7c3aed","#ef4444","#0d9488","#4f46e5","#db2777"];
+  tbody.innerHTML = drivers.map((d, i) => {
+    const initials = (d.name || "?").split(" ").map(w => w[0]).join("").toUpperCase().slice(0,2);
+    const color = colors[i % colors.length];
+    const statusBadge =
+      d.status === "active"   ? `<span class="badge badge-green"><span class="dot dot-green"></span> Active</span>` :
+      d.status === "on-break" ? `<span class="badge badge-orange"><span class="dot dot-orange"></span> On Break</span>` :
+                                `<span class="badge badge-gray"><span class="dot dot-gray"></span> Inactive</span>`;
+    return `<tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="driver-avatar" style="background:${color}">${initials}</div>
+          <div>
+            <div style="font-weight:600">${d.name}</div>
+            <div style="font-size:11px;color:var(--text-muted)">${d.driverId || "—"}</div>
+          </div>
+        </div>
+      </td>
+      <td>${d.phone || "—"}</td>
+      <td style="font-size:12px;color:var(--text-secondary)">${d.email || "—"}</td>
+      <td>${d.vehicle || "—"}</td>
+      <td>${d.vehicleNumber || "—"}</td>
+      <td>${d.location || "—"}</td>
+      <td>${d.deliveriesCompleted || 0}</td>
+      <td>${statusBadge}</td>
+      <td>
+        <div class="action-btns">
+          <button class="action-btn ab-view" onclick="showToast('👁 ${(d.name||'').replace(/'/g,'')} — ${d.driverId||''}')" title="View">👁</button>
+          <button class="action-btn ab-delete" onclick="deleteDriverById('${d._id}', this)" title="Delete">🗑</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+  document.getElementById("drv-count-label").textContent =
+    `Showing ${drivers.length} of ${_allDrivers.length} driver${_allDrivers.length !== 1 ? "s" : ""}`;
+}
+
+function filterDriversTable(query) {
+  const q = (query || "").toLowerCase().trim();
+  const statusF = (document.getElementById("drv-status-filter") || {}).value || "";
+  let filtered = _allDrivers;
+  if (statusF) filtered = filtered.filter(d => d.status === statusF);
+  if (q) filtered = filtered.filter(d =>
+    (d.name || "").toLowerCase().includes(q) ||
+    (d.phone || "").includes(q) ||
+    (d.email || "").toLowerCase().includes(q) ||
+    (d.vehicleNumber || "").toLowerCase().includes(q) ||
+    (d.driverId || "").toLowerCase().includes(q)
+  );
+  renderDriversTable(filtered);
+}
+
+async function addDriverToAPI() {
+  const name    = (document.getElementById("drv-name")     || {}).value?.trim();
+  const phone   = (document.getElementById("drv-phone")    || {}).value?.trim();
+  const email   = (document.getElementById("drv-email")    || {}).value?.trim();
+  const license = (document.getElementById("drv-license")  || {}).value?.trim();
+  const vehicle = (document.getElementById("drv-vehicle")  || {}).value;
+  const plate   = (document.getElementById("drv-plate")    || {}).value?.trim();
+  const location= (document.getElementById("drv-location") || {}).value?.trim();
+  const status  = (document.getElementById("drv-status")   || {}).value;
+
+  if (!name || !phone || !email) {
+    showToast("⚠ Name, phone and email are required"); return;
+  }
+
+  try {
+    const res  = await fetch("/api/drivers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, phone, email, licenseNumber: license, vehicle, vehicleNumber: plate, location, status })
+    });
+    const json = await res.json();
+    if (json.success) {
+      showToast("✅ Driver added: " + name);
+      closeModal("driver");
+      // Clear form
+      ["drv-name","drv-phone","drv-email","drv-license","drv-plate","drv-location"].forEach(id => {
+        const el = document.getElementById(id); if (el) el.value = "";
+      });
+      loadDrivers();
+    } else {
+      showToast("❌ " + (json.message || "Failed to add driver"));
+    }
+  } catch (err) {
+    showToast("❌ Server error: " + err.message);
+  }
+}
+
+async function deleteDriverById(id, btn) {
+  if (!confirm("Delete this driver? This cannot be undone.")) return;
+  try {
+    const res  = await fetch(`/api/drivers/${id}`, { method: "DELETE" });
+    const json = await res.json();
+    if (json.success) {
+      btn.closest("tr").remove();
+      _allDrivers = _allDrivers.filter(d => d._id !== id);
+      document.getElementById("drv-active").textContent  = _allDrivers.filter(d => d.status === "active").length;
+      document.getElementById("drv-count-label").textContent = `Showing ${_allDrivers.length} driver${_allDrivers.length !== 1 ? "s" : ""}`;
+      showToast("🗑 Driver deleted");
+    } else {
+      showToast("❌ " + (json.message || "Delete failed"));
+    }
+  } catch (err) {
+    showToast("❌ Server error");
+  }
+}
+
+function exportDriversCSV() {
+  if (!_allDrivers.length) { showToast("⚠ No drivers to export"); return; }
+  const rows = [["#","Driver ID","Name","Email","Phone","Vehicle","Plate","Location","Status","Deliveries"]];
+  _allDrivers.forEach((d, i) => rows.push([
+    i+1, d.driverId||"", d.name||"", d.email||"", d.phone||"",
+    d.vehicle||"", d.vehicleNumber||"", d.location||"", d.status||"", d.deliveriesCompleted||0
+  ]));
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const a = document.createElement("a");
+  a.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+  a.download = "fuelgo_drivers.csv";
+  a.click();
+  showToast("📥 Drivers exported as CSV");
+}
+
+// ── Load Dashboard KPIs (real data) ──
+async function loadDashboardKPIs() {
+  try {
+    const [rptRes, adminRes] = await Promise.all([
+      fetch('/api/admin/reports/dashboard'),
+      fetch('/api/admin/stats/dashboard')
+    ]);
+    const rpt   = await rptRes.json();
+    const admin = await adminRes.json();
+
+    if (rpt.success) {
+      const d = rpt.data;
+      // KPI cards
+      document.getElementById('kpi-orders-today').textContent = d.orders.today;
+      document.getElementById('kpi-revenue-today').textContent =
+        d.revenue.today > 0 ? '₹' + d.revenue.today.toLocaleString('en-IN') + ' today' : 'No revenue today yet';
+      document.getElementById('kpi-revenue-total').textContent =
+        d.revenue.total > 0 ? '₹' + d.revenue.total.toLocaleString('en-IN') : '₹0';
+      document.getElementById('kpi-active-deliveries').textContent = d.orders.inTransit;
+      document.getElementById('kpi-pending-label').textContent =
+        d.orders.pending + ' pending · ' + d.orders.inTransit + ' in-transit';
+
+      // Orders page stats
+      const elP = document.getElementById('stat-pending');
+      const elT = document.getElementById('stat-transit');
+      const elD = document.getElementById('stat-delivered');
+      if (elP) elP.textContent = d.orders.pending;
+      if (elT) elT.textContent = d.orders.inTransit;
+      if (elD) elD.textContent = d.orders.delivered;
+
+      const sub = document.getElementById('orders-page-subtitle');
+      if (sub) sub.textContent =
+        d.orders.total + ' total orders · ' + d.orders.inTransit + ' in-transit · ' + d.orders.pending + ' pending';
+
+      // Map modal
+      const elMD = document.getElementById('map-deliveries');
+      const elMP = document.getElementById('map-pending');
+      const elMS = document.getElementById('map-summary');
+      if (elMD) elMD.textContent = d.orders.inTransit;
+      if (elMP) elMP.textContent = d.orders.pending;
+      if (elMS) elMS.textContent = d.orders.inTransit + ' active deliveries · ' + d.orders.pending + ' pending';
+    }
+
+    if (admin.success) {
+      const a = admin.data;
+      // Active drivers for map modal
+      const elMA = document.getElementById('map-drivers');
+      if (elMA) elMA.textContent = a.drivers.available;
+
+      // Fuel stock KPI
+      const inv = a.inventory.items;
+      if (inv && inv.length > 0) {
+        // Find lowest stock item
+        const sorted = inv.sort((a, b) => (a.currentStock / (a.maxCapacity||1)) - (b.currentStock / (b.maxCapacity||1)));
+        const lowest = sorted[0];
+        const pct = lowest.maxCapacity ? Math.round((lowest.currentStock / lowest.maxCapacity) * 100) : 0;
+        document.getElementById('kpi-fuel-stock').textContent = pct + '%';
+        document.getElementById('kpi-fuel-bar').style.width = pct + '%';
+        document.getElementById('kpi-fuel-bar').style.background = pct < 30 ? 'var(--red)' : pct < 60 ? 'var(--orange)' : 'var(--green)';
+        document.getElementById('kpi-fuel-alert').textContent =
+          (pct < 30 ? '⚠ Low ' : '✅ ') + lowest.fuelType + ' at ' + pct + '%';
+      } else {
+        document.getElementById('kpi-fuel-stock').textContent = 'N/A';
+        document.getElementById('kpi-fuel-alert').textContent = 'No inventory data';
+      }
+    }
+  } catch (err) {
+    console.warn('KPI load failed:', err);
+  }
+}
+
+// ── Load Real Reports Data ──
+async function loadReportsData() {
+  const page = document.getElementById('page-reports');
+  if (!page || page.dataset.loaded === 'true') return;
+  page.dataset.loaded = 'true';
+
+  try {
+    const res  = await fetch('/api/admin/reports/dashboard');
+    const json = await res.json();
+    if (!json.success) return;
+    const d = json.data;
+
+    // Summary KPIs
+    const fmt = (n) => '₹' + (n||0).toLocaleString('en-IN');
+    const el = (id) => document.getElementById(id);
+    if (el('rpt-total-revenue'))  el('rpt-total-revenue').textContent  = fmt(d.revenue.total);
+    if (el('rpt-total-orders'))   el('rpt-total-orders').textContent   = d.orders.total;
+    if (el('rpt-delivered'))      el('rpt-delivered').textContent      = d.orders.delivered;
+    if (el('rpt-customers'))      el('rpt-customers').textContent      = d.customers.total;
+
+    // Orders by status bars
+    const total = d.orders.total || 1;
+    const statusItems = [
+      { label: 'Delivered',  count: d.orders.delivered,  color: 'var(--green)' },
+      { label: 'In Transit', count: d.orders.inTransit,  color: 'var(--blue)' },
+      { label: 'Pending',    count: d.orders.pending,    color: 'var(--orange)' },
+      { label: 'Confirmed',  count: d.orders.confirmed,  color: 'var(--teal)' },
+      { label: 'Cancelled',  count: d.orders.cancelled,  color: 'var(--red)' },
+    ];
+    const statusChart = el('rpt-status-chart');
+    if (statusChart) {
+      statusChart.innerHTML = statusItems.map(s => {
+        const pct = total > 0 ? Math.round((s.count / total) * 100) : 0;
+        return `<div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px">
+            <span>${s.label}</span><strong>${s.count} (${pct}%)</strong>
+          </div>
+          <div class="inv-bar" style="height:8px">
+            <div class="inv-fill" style="width:${pct}%;background:${s.color}"></div>
+          </div></div>`;
+      }).join('');
+    }
+
+    // Revenue by fuel
+    const fuelDiv = el('rpt-fuel-revenue');
+    const fuelTotal = el('rpt-fuel-total');
+    if (fuelDiv && d.revenueByFuel && d.revenueByFuel.length > 0) {
+      const maxFuel = Math.max(...d.revenueByFuel.map(f => f.total));
+      const totalFuelRev = d.revenueByFuel.reduce((s, f) => s + f.total, 0);
+      const fuelColors = { Petrol: 'var(--blue)', Diesel: 'var(--orange)', CNG: 'var(--green)' };
+      fuelDiv.innerHTML = d.revenueByFuel.map(f => {
+        const pct = maxFuel > 0 ? Math.round((f.total / maxFuel) * 100) : 0;
+        const share = totalFuelRev > 0 ? Math.round((f.total / totalFuelRev) * 100) : 0;
+        const color = fuelColors[f._id] || 'var(--blue)';
+        return `<div><div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:13px">${f._id}</span>
+            <strong>${fmt(f.total)} (${share}%)</strong>
+          </div><div class="inv-bar" style="height:8px">
+            <div class="inv-fill" style="width:${pct}%;background:${color}"></div>
+          </div></div>`;
+      }).join('');
+      if (fuelTotal) fuelTotal.textContent = fmt(totalFuelRev);
+    } else if (fuelDiv) {
+      fuelDiv.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">📦 No delivered order revenue yet</div>';
+      if (fuelTotal) fuelTotal.textContent = '₹0';
+    }
+
+    // Top drivers
+    const driversDiv = el('rpt-top-drivers');
+    if (driversDiv && d.topDrivers && d.topDrivers.length > 0) {
+      const medals = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+      const colors = ['var(--green-light)','var(--blue-light)','var(--orange-light)','#f3f0ff','#f1f5f9'];
+      const barColors = ['var(--green)','var(--blue)','var(--orange)','var(--purple)','#94a3b8'];
+      const maxDel = Math.max(...d.topDrivers.map(dr => dr.deliveriesCompleted || 0), 1);
+      driversDiv.innerHTML = '<div class="timeline">' + d.topDrivers.map((dr, i) => {
+        const pct = Math.round(((dr.deliveriesCompleted||0) / maxDel) * 100);
+        return `<div class="tl-item">
+          <div class="tl-dot" style="background:${colors[i]}">${medals[i]}</div>
+          <div class="tl-content">
+            <div class="tl-title">${dr.name}</div>
+            <div class="tl-time">${dr.deliveriesCompleted||0} deliveries · ${dr.driverId||''}</div>
+            <div class="tl-desc"><div class="inv-level"><div class="inv-bar"><div class="inv-fill" style="width:${pct}%;background:${barColors[i]}"></div></div>${pct}% relative</div></div>
+          </div></div>`;
+      }).join('') + '</div>';
+    } else if (driversDiv) {
+      driversDiv.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">👤 No driver data yet</div>';
+    }
+
+    // Order breakdown
+    const bkDiv = el('rpt-breakdown');
+    if (bkDiv) {
+      bkDiv.innerHTML = [
+        { label: 'Total Orders',      val: d.orders.total,     color: 'var(--blue-light)',   text: 'var(--blue)' },
+        { label: 'Today\'s Orders',  val: d.orders.today,     color: 'var(--orange-light)', text: 'var(--orange)' },
+        { label: 'Total Customers',   val: d.customers.total,  color: 'var(--green-light)',  text: 'var(--green)' },
+        { label: 'Total Revenue',     val: fmt(d.revenue.total), color: 'var(--purple)/10', text: 'var(--purple)' },
+      ].map(item => `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:${item.color};border-radius:8px">
+          <span style="font-size:13px;font-weight:600">${item.label}</span>
+          <span style="font-family:'Syne',sans-serif;font-weight:800;color:${item.text}">${item.val}</span>
+        </div>`).join('');
+    }
+  } catch (err) {
+    console.warn('Reports load failed:', err);
+  }
+}
+
+// ── Load orders immediately on dashboard open ──
+setTimeout(() => {
+  loadOrders();
+  loadDashboardKPIs();
+}, 500);
+
+// Auto-refresh KPIs every 60 seconds
+setInterval(loadDashboardKPIs, 60000);
+
+</script>
+</body>
+</html>

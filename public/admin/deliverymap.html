@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Delivery Map - FuelDelivery Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+* {margin: 0; padding: 0; box-sizing: border-box;}
+body {font-family: 'Poppins', sans-serif; background: #f5f7fb; height: 100vh; overflow: hidden;}
+.container {display: flex; height: 100vh;}
+.sidebar {width: 260px; background: #2c3e50; color: white; padding: 30px 0; overflow-y: auto; max-height: 100vh;}
+.sidebar-logo {padding: 0 20px 30px; text-align: center; font-size: 20px; font-weight: 700;}
+.sidebar-nav {list-style: none;}
+.sidebar-nav a {display: flex; align-items: center; padding: 15px 20px; color: #aaa; text-decoration: none; transition: all 0.3s; gap: 12px; font-size: 13px;}
+.sidebar-nav a:hover, .sidebar-nav a.active {color: white; background: rgba(52, 152, 219, 0.2); border-left: 4px solid #3498db;}
+.main {flex: 1; display: flex; flex-direction: column;}
+.header {background: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}
+.header-title {font-size: 20px; font-weight: 600; color: #2c3e50;}
+.btn {padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-family: 'Poppins'; font-weight: 600; transition: all 0.3s;}
+.btn-primary {background: #3498db; color: white;}
+.btn-primary:hover {background: #2980b9; transform: translateY(-2px);}
+#map {flex: 1; width: 100%;}
+.map-legend {position: absolute; bottom: 20px; right: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); font-size: 12px; z-index: 400;}
+.legend-item {display: flex; align-items: center; gap: 8px; margin-bottom: 8px;}
+.legend-icon {width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px;}
+.icon-active {background: #27ae60;}
+.icon-transit {background: #f39c12;}
+.icon-stop {background: #e74c3c;}
+.deliveries-panel {position: absolute; top: 20px; right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); max-width: 280px; max-height: 400px; overflow-y: auto; z-index: 400;}
+.panel-header {padding: 15px; border-bottom: 1px solid #ecf0f1; font-weight: 600; color: #2c3e50;}
+.delivery-item {padding: 12px; border-bottom: 1px solid #ecf0f1; cursor: pointer; transition: all 0.3s;}
+.delivery-item:hover {background: #f8f9fa;}
+.delivery-item-title {font-size: 12px; font-weight: 600; color: #2c3e50;}
+.delivery-item-status {font-size: 11px; color: #7f8c8d; margin-top: 4px;}
+.notification {position: fixed; top: 20px; left: 280px; padding: 15px 20px; background: #27ae60; color: white; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 10000; animation: slideIn 0.3s ease;}
+.notification.error {background: #e74c3c;}
+@keyframes slideIn {from {transform: translateX(-400px); opacity: 0;} to {transform: translateX(0); opacity: 1;}}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <aside class="sidebar">
+    <div class="sidebar-logo">🚀 FuelDelivery</div>
+    <ul class="sidebar-nav">
+      <li><a href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a></li>
+      <li><a href="orders.html"><i class="fas fa-box"></i> Orders</a></li>
+      <li><a href="customer.html"><i class="fas fa-users"></i> Customers</a></li>
+      <li><a href="drivers.html"><i class="fas fa-user-tie"></i> Drivers</a></li>
+      <li><a href="inventory.html"><i class="fas fa-warehouse"></i> Inventory</a></li>
+      <li><a href="fleet.html"><i class="fas fa-truck"></i> Fleet</a></li>
+      <li><a href="payments.html"><i class="fas fa-credit-card"></i> Payments</a></li>
+      <li><a href="pricing.html"><i class="fas fa-tags"></i> Pricing</a></li>
+      <li><a href="reports.html"><i class="fas fa-chart-line"></i> Reports</a></li>
+      <li><a href="tracking.html" class="active"><i class="fas fa-location-dot"></i> Tracking</a></li>
+      <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+      <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </aside>
+
+  <div class="main">
+    <header class="header">
+      <div class="header-title">🗺️ Live Delivery Map</div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-primary" onclick="loadDeliveries()" style="font-size: 13px;"><i class="fas fa-sync"></i> Refresh</button>
+      </div>
+    </header>
+
+    <div id="map"></div>
+    
+    <div class="deliveries-panel" id="deliveriesPanel">
+      <div class="panel-header"><i class="fas fa-truck"></i> Active Deliveries</div>
+      <div id="deliveryList"></div>
+    </div>
+
+    <div class="map-legend">
+      <div style="font-weight: 600; margin-bottom: 10px;">Legend</div>
+      <div class="legend-item">
+        <div class="legend-icon icon-transit"><i class="fas fa-circle"></i></div>
+        <span>In Transit</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon icon-active"><i class="fas fa-check"></i></div>
+        <span>Delivered</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon icon-stop"><i class="fas fa-times"></i></div>
+        <span>Failed</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const AUTH_TOKEN = localStorage.getItem('adminToken');
+let map;
+let markers = [];
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (!AUTH_TOKEN) {
+    window.location.href = '/admin-login.html';
+    return;
+  }
+  initMap();
+  loadDeliveries();
+  setInterval(loadDeliveries, 15000); // Auto-refresh every 15 seconds
+});
+
+function initMap() {
+  map = L.map('map').setView([28.7041, 77.1025], 12); // Default to Delhi, India
+  
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(map);
+}
+
+async function loadDeliveries() {
+  try {
+    const response = await fetch('/api/tracking?limit=50', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${AUTH_TOKEN}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.status === 401) {
+      localStorage.removeItem('adminToken');
+      window.location.href = '/admin-login.html';
+      return;
+    }
+
+    if (!response.ok) throw new Error(`Error: ${response.status}`);
+
+    const result = await response.json();
+    const deliveries = result.data || [];
+    
+    // Clear old markers
+    markers.forEach(marker => map.removeLayer(marker));
+    markers = [];
+
+    // Add new markers
+    deliveries.forEach(delivery => {
+      if (delivery.currentLocation && typeof delivery.currentLocation === 'object') {
+        const { latitude, longitude } = delivery.currentLocation;
+        
+        let icon = getIcon(delivery.status);
+        const marker = L.marker([latitude, longitude], { icon }).addTo(map);
+        
+        marker.bindPopup(`
+          <div style="font-size: 12px;">
+            <strong>Order #${(delivery.orderId || 'N/A').substring(0, 8)}</strong><br>
+            Driver: ${delivery.driverName || 'N/A'}<br>
+            Status: ${delivery.status || 'N/A'}<br>
+            Destination: ${delivery.deliveryLocation || 'N/A'}
+          </div>
+        `);
+        
+        markers.push(marker);
+      }
+    });
+
+    // Update deliveries list
+    updateDeliveriesList(deliveries);
+
+    // Auto-fit map bounds
+    if (markers.length > 0) {
+      const group = new L.featureGroup(markers);
+      map.fitBounds(group.getBounds().pad(0.1));
+    }
+  } catch (error) {
+    console.error('Error loading deliveries:', error);
+    showNotification('Error loading deliveries: ' + error.message, 'error');
+  }
+}
+
+function getIcon(status) {
+  const iconHtml = {
+    'in-transit': '<i class="fas fa-truck" style="color: white; font-size: 16px;"></i>',
+    'picked-up': '<i class="fas fa-box" style="color: white; font-size: 16px;"></i>',
+    'delivered': '<i class="fas fa-check" style="color: white; font-size: 16px;"></i>',
+    'failed': '<i class="fas fa-times" style="color: white; font-size: 16px;"></i>'
+  };
+
+  const colors = {
+    'in-transit': '#f39c12',
+    'picked-up': '#3498db',
+    'delivered': '#27ae60',
+    'failed': '#e74c3c'
+  };
+
+  return L.divIcon({
+    html: `<div style="background: ${colors[status] || '#3498db'}; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">${iconHtml[status] || ''}</div>`,
+    iconSize: [40, 40],
+    className: 'delivery-marker'
+  });
+}
+
+function updateDeliveriesList(deliveries) {
+  const list = document.getElementById('deliveryList');
+  
+  if (deliveries.length === 0) {
+    list.innerHTML = '<div style="padding: 15px; color: #7f8c8d; font-size: 12px;">No active deliveries</div>';
+    return;
+  }
+
+  list.innerHTML = deliveries.map(delivery => `
+    <div class="delivery-item" onclick="focusDelivery('${(delivery.currentLocation && typeof delivery.currentLocation === 'object') ? delivery.currentLocation.latitude : 0}', '${(delivery.currentLocation && typeof delivery.currentLocation === 'object') ? delivery.currentLocation.longitude : 0}')">
+      <div class="delivery-item-title">Order #${(delivery.orderId || 'N/A').substring(0, 8)}</div>
+      <div class="delivery-item-status">Driver: ${delivery.driverName || 'N/A'}</div>
+      <div class="delivery-item-status">Status: ${delivery.status || 'N/A'}</div>
+    </div>
+  `).join('');
+}
+
+function focusDelivery(latitude, longitude) {
+  if (latitude && longitude) {
+    map.setView([latitude, longitude], 15);
+  }
+}
+
+function logout() {
+  if (confirm('Are you sure you want to logout?')) {
+    localStorage.removeItem('adminToken');
+    window.location.href = '/admin-login.html';
+  }
+}
+
+function showNotification(message, type = 'success') {
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  setTimeout(() => notification.remove(), 3000);
+}
+</script>
+
+</body>
+</html>

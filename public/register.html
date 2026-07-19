@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Create Account</title>
+
+<link rel="stylesheet" href="css/auth.css">
+
+<style>
+
+body{
+font-family:"Times New Roman", Times, serif;
+margin:0;
+}
+
+/* background */
+.auth-container{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#898989,#D9D9D9);
+}
+
+/* card */
+.auth-card{
+background:white;
+padding:40px;
+width:380px;
+border-radius:20px;
+box-shadow:0 15px 35px rgba(0,0,0,0.2);
+text-align:left;
+}
+
+/* title */
+.auth-card h2{
+margin-bottom:25px;
+font-size:28px;
+text-align:center;
+}
+
+/* labels */
+label{
+font-size:14px;
+font-weight:600;
+}
+
+/* inputs */
+.input-row{
+position:relative;
+margin-top:5px;
+margin-bottom:15px;
+}
+
+.input-row input{
+width:100%;
+padding:10px;
+border-radius:6px;
+border:1px solid #ccc;
+font-size:15px;
+}
+
+/* right button */
+.input-row button{
+position:absolute;
+right:5px;
+top:5px;
+padding:6px 10px;
+border:none;
+background:none;
+color:#3b6df6;
+font-weight:bold;
+cursor:pointer;
+}
+
+/* OTP verified message */
+#otpStatus{
+font-size:13px;
+color:green;
+display:none;
+margin-top:-10px;
+margin-bottom:10px;
+}
+
+/* password */
+.auth-card input[type=password]{
+width:100%;
+padding:10px;
+border-radius:6px;
+border:1px solid #ccc;
+margin-bottom:15px;
+}
+
+/* checkbox */
+.checkbox{
+display:flex;
+align-items:center;
+gap:8px;
+font-size:14px;
+margin-bottom:15px;
+}
+
+/* register button */
+.auth-card button.register-btn{
+width:100%;
+padding:12px;
+font-size:16px;
+background:#2f63d6;
+border:none;
+color:white;
+border-radius:8px;
+cursor:pointer;
+}
+
+.auth-card button.register-btn:hover{
+opacity:0.9;
+}
+
+/* login text */
+.auth-card p{
+text-align:center;
+margin-top:15px;
+font-size:14px;
+}
+
+.auth-card a{
+color:#3b6df6;
+text-decoration:none;
+font-weight:bold;
+}
+
+/* success popup */
+.popup{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:white;
+padding:40px;
+border-radius:12px;
+box-shadow:0 10px 40px rgba(0,0,0,0.3);
+text-align:center;
+display:none;
+width:400px;
+}
+
+.popup h2{
+margin:10px 0;
+}
+
+.popup p{
+color:#666;
+}
+
+</style>
+
+<script src="js/auth.js" defer></script>
+
+</head>
+
+<body>
+
+<div class="auth-container">
+<div class="auth-card">
+
+<h2>Create an Account</h2>
+
+<form id="registerForm">
+
+<!-- NAME -->
+<label>Your name</label>
+<div class="input-row">
+<input type="text" id="name" placeholder="Name" required>
+</div>
+
+<!-- EMAIL -->
+<label>Your email</label>
+<div class="input-row">
+<input type="email" id="email" placeholder="@gmail.com" required>
+<button type="button" id="sendOtpBtn" onclick="sendOTP()">Send OTP</button>
+</div>
+
+<!-- OTP -->
+<label id="otpLabel" style="display:none;">Verify OTP</label>
+
+<div class="input-row" id="otpBox" style="display:none;">
+<input type="text" id="otp" placeholder="Enter OTP">
+<button type="button" id="verifyBtn" onclick="verifyOTP()">Verify</button>
+</div>
+
+<div id="otpStatus"></div>
+
+<!-- PHONE -->
+<label>Phone Number</label>
+<div class="input-row">
+<input type="tel" id="phone" placeholder="Phone Number" maxlength="10" required>
+</div>
+
+<!-- PASSWORD -->
+<label>Password</label>
+<input type="password" id="password" placeholder="********" required>
+
+<!-- TERMS -->
+<div class="checkbox">
+<input type="checkbox" required>
+<span>I accept the <a href="#">Terms and Conditions</a></span>
+</div>
+
+<button class="register-btn">Create an account</button>
+
+</form>
+
+<p>Already have an account? <a href="login.html">Login here</a></p>
+
+</div>
+</div>
+
+
+<!-- SUCCESS POPUP -->
+<div class="popup" id="successPopup">
+
+<div style="font-size:50px;color:#4CAF50;">✔</div>
+
+<h2>Registration Successful</h2>
+
+<p>You will be redirected to login page in 5 seconds</p>
+
+</div>
+
+</body>
+</html>

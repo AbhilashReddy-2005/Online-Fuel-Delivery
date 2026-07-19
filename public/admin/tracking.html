@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tracking - FuelDelivery Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* {margin: 0; padding: 0; box-sizing: border-box;}
+body {font-family: 'Poppins', sans-serif; background: #f5f7fb;}
+.container {display: flex; min-height: 100vh;}
+.sidebar {width: 260px; background: #2c3e50; color: white; padding: 30px 0; position: fixed; height: 100vh; overflow-y: auto;}
+.sidebar-logo {padding: 0 20px 30px; text-align: center; font-size: 20px; font-weight: 700;}
+.sidebar-nav {list-style: none;}
+.sidebar-nav li {margin: 0;}
+.sidebar-nav a {display: flex; align-items: center; padding: 15px 20px; color: #aaa; text-decoration: none; transition: all 0.3s; gap: 12px;}
+.sidebar-nav a:hover, .sidebar-nav a.active {color: white; background: rgba(52, 152, 219, 0.2); border-left: 4px solid #3498db;}
+.main {margin-left: 260px; flex: 1;}
+.header {background: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}
+.header-title {font-size: 20px; font-weight: 600; color: #2c3e50;}
+.header-actions {display: flex; gap: 15px; align-items: center;}
+.btn {padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-family: 'Poppins'; font-weight: 600; transition: all 0.3s;}
+.btn-primary {background: #3498db; color: white;}
+.btn-primary:hover {background: #2980b9; transform: translateY(-2px);}
+.content {padding: 40px;}
+.page-title {font-size: 28px; font-weight: 700; color: #2c3e50; margin-bottom: 30px;}
+.filters {background: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;}
+.filter-group {display: flex; flex-direction: column; gap: 6px;}
+.filter-label {font-size: 12px; font-weight: 600; color: #7f8c8d; text-transform: uppercase;}
+.filter-input, .filter-select {padding: 10px 12px; border: 1px solid #ecf0f1; border-radius: 6px; font-family: 'Poppins'; font-size: 13px;}
+.filter-input:focus, .filter-select:focus {outline: none; border-color: #3498db;}
+.tracking-grid {display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;}
+.tracking-card {background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #3498db;}
+.tracking-header {display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;}
+.order-id {font-weight: 700; color: #2c3e50;}
+.status-badge {display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;}
+.status-pickup {background: #e3f2fd; color: #1565c0;}
+.status-transit {background: #fff3e0; color: #e65100;}
+.status-delivered {background: #e8f5e9; color: #2e7d32;}
+.status-failed {background: #ffebee; color: #c62828;}
+.track-detail {margin-bottom: 12px; display: flex; gap: 12px;}
+.track-icon {width: 36px; height: 36px; border-radius: 50%; background: #ecf0f1; display: flex; align-items: center; justify-content: center; color: #3498db;}
+.track-info {flex: 1;}
+.track-label {font-size: 11px; font-weight: 600; color: #7f8c8d; text-transform: uppercase;}
+.track-value {font-size: 13px; color: #2c3e50; margin-top: 2px;}
+.timeline {margin-top: 15px; padding-top: 15px; border-top: 1px solid #ecf0f1;}
+.timeline-item {font-size: 12px; color: #7f8c8d; margin-bottom: 8px; padding-left: 20px; position: relative;}
+.timeline-item::before {content: '●'; position: absolute; left: 0; color: #3498db;}
+.empty-state {text-align: center; padding: 60px 20px; color: #7f8c8d;}
+.notification {position: fixed; top: 20px; right: 20px; padding: 15px 20px; background: #27ae60; color: white; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 10000; animation: slideIn 0.3s ease;}
+.notification.error {background: #e74c3c;}
+@keyframes slideIn {from {transform: translateX(400px); opacity: 0;} to {transform: translateX(0); opacity: 1;}}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <aside class="sidebar">
+    <div class="sidebar-logo">🚀 FuelDelivery</div>
+    <ul class="sidebar-nav">
+      <li><a href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a></li>
+      <li><a href="orders.html"><i class="fas fa-box"></i> Orders</a></li>
+      <li><a href="customer.html"><i class="fas fa-users"></i> Customers</a></li>
+      <li><a href="drivers.html"><i class="fas fa-user-tie"></i> Drivers</a></li>
+      <li><a href="inventory.html"><i class="fas fa-warehouse"></i> Inventory</a></li>
+      <li><a href="fleet.html"><i class="fas fa-truck"></i> Fleet</a></li>
+      <li><a href="payments.html"><i class="fas fa-credit-card"></i> Payments</a></li>
+      <li><a href="pricing.html"><i class="fas fa-tags"></i> Pricing</a></li>
+      <li><a href="reports.html"><i class="fas fa-chart-line"></i> Reports</a></li>
+      <li><a href="tracking.html" class="active"><i class="fas fa-location-dot"></i> Tracking</a></li>
+      <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+      <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </aside>
+
+  <div class="main">
+    <header class="header">
+      <div class="header-title">📍 Live Delivery Tracking</div>
+      <div class="header-actions">
+        <button class="btn btn-primary" onclick="refreshTracking()"><i class="fas fa-sync"></i> Refresh</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <h1 class="page-title">Real-time Tracking</h1>
+
+      <div class="filters">
+        <div class="filter-group">
+          <label class="filter-label">Status</label>
+          <select class="filter-select" id="statusFilter" onchange="filterTracking()">
+            <option value="">All Status</option>
+            <option value="picked-up">Picked Up</option>
+            <option value="in-transit">In Transit</option>
+            <option value="delivered">Delivered</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Search Order</label>
+          <input type="text" class="filter-input" id="searchInput" placeholder="Order ID..." onkeyup="filterTracking()">
+        </div>
+        <div class="filter-group" style="margin-top: auto;">
+          <button class="btn btn-primary" onclick="resetFilters()" style="width: 100%;"><i class="fas fa-redo"></i> Reset</button>
+        </div>
+      </div>
+
+      <div class="tracking-grid" id="trackingList">
+        <div class="empty-state">⏳ Loading deliveries...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let allTracking = [];
+let filteredTracking = [];
+const API_URL = '/api/tracking';
+const AUTH_TOKEN = localStorage.getItem('adminToken');
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (!AUTH_TOKEN) {
+    window.location.href = '/admin-login.html';
+    return;
+  }
+  loadTracking();
+  setInterval(loadTracking, 15000); // Auto-refresh every 15 seconds
+});
+
+async function loadTracking() {
+  try {
+    const response = await fetch(API_URL + '?limit=50', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${AUTH_TOKEN}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.status === 401) {
+      localStorage.removeItem('adminToken');
+      window.location.href = '/admin-login.html';
+      return;
+    }
+
+    if (!response.ok) throw new Error(`Error: ${response.status}`);
+
+    const result = await response.json();
+    allTracking = result.data || [];
+    filteredTracking = [...allTracking];
+    renderTracking();
+  } catch (error) {
+    console.error('Error loading tracking:', error);
+    showNotification('Error loading deliveries: ' + error.message, 'error');
+  }
+}
+
+function renderTracking() {
+  const list = document.getElementById('trackingList');
+  
+  if (filteredTracking.length === 0) {
+    list.innerHTML = '<div class="empty-state">📭 No deliveries found</div>';
+    return;
+  }
+
+  list.innerHTML = filteredTracking.map(tracking => {
+    let statusClass = 'status-pickup';
+    let statusIcon = 'fa-clipboard-list';
+    let statusText = tracking.status || 'Pending';
+    
+    if (tracking.status === 'in-transit') {
+      statusClass = 'status-transit';
+      statusIcon = 'fa-truck';
+      statusText = 'In Transit';
+    } else if (tracking.status === 'delivered') {
+      statusClass = 'status-delivered';
+      statusIcon = 'fa-check-circle';
+      statusText = 'Delivered';
+    } else if (tracking.status === 'failed') {
+      statusClass = 'status-failed';
+      statusIcon = 'fa-times-circle';
+      statusText = 'Failed';
+    }
+
+    return `
+      <div class="tracking-card">
+        <div class="tracking-header">
+          <div class="order-id">Order #${(tracking.orderId || 'N/A').substring(0, 8)}</div>
+          <span class="status-badge ${statusClass}">
+            <i class="fas ${statusIcon}"></i> ${statusText}
+          </span>
+        </div>
+
+        <div class="track-detail">
+          <div class="track-icon"><i class="fas fa-person"></i></div>
+          <div class="track-info">
+            <div class="track-label">Driver</div>
+            <div class="track-value">${tracking.driverName || 'Not Assigned'}</div>
+          </div>
+        </div>
+
+        <div class="track-detail">
+          <div class="track-icon"><i class="fas fa-location-dot"></i></div>
+          <div class="track-info">
+            <div class="track-label">Current Location</div>
+            <div class="track-value">${tracking.currentLocation || 'GPS Tracking Active'}</div>
+          </div>
+        </div>
+
+        <div class="track-detail">
+          <div class="track-icon"><i class="fas fa-flag"></i></div>
+          <div class="track-info">
+            <div class="track-label">Destination</div>
+            <div class="track-value">${tracking.deliveryLocation || 'N/A'}</div>
+          </div>
+        </div>
+
+        <div class="track-detail">
+          <div class="track-icon"><i class="fas fa-clock"></i></div>
+          <div class="track-info">
+            <div class="track-label">Est. Arrival</div>
+            <div class="track-value">${formatTime(tracking.estimatedTime)}</div>
+          </div>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-item">✓ Order Picked Up</div>
+          ${tracking.status !== 'picked-up' ? '<div class="timeline-item">→ In Transit</div>' : ''}
+          ${tracking.status === 'delivered' ? '<div class="timeline-item">✓ Delivered</div>' : ''}
+          ${tracking.status === 'failed' ? '<div class="timeline-item">✗ Delivery Failed</div>' : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function filterTracking() {
+  const status = document.getElementById('statusFilter').value;
+  const search = document.getElementById('searchInput').value.toLowerCase();
+
+  filteredTracking = allTracking.filter(tracking => {
+    const matchStatus = !status || tracking.status === status;
+    const matchSearch = !search || (tracking.orderId && tracking.orderId.toLowerCase().includes(search));
+    return matchStatus && matchSearch;
+  });
+
+  renderTracking();
+}
+
+function resetFilters() {
+  document.getElementById('statusFilter').value = '';
+  document.getElementById('searchInput').value = '';
+  filteredTracking = [...allTracking];
+  renderTracking();
+}
+
+function refreshTracking() {
+  loadTracking();
+  showNotification('Deliveries refreshed!', 'success');
+}
+
+function formatTime(dateString) {
+  if (!dateString) return 'Not available';
+  const date = new Date(dateString);
+  return date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+}
+
+function logout() {
+  if (confirm('Are you sure you want to logout?')) {
+    localStorage.removeItem('adminToken');
+    window.location.href = '/admin-login.html';
+  }
+}
+
+function showNotification(message, type = 'success') {
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  setTimeout(() => notification.remove(), 3000);
+}
+</script>
+
+</body>
+</html>
