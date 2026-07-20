@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FuelGo — Sign In</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;
+  background:#dbeeff;
+  font-family:'DM Sans',sans-serif;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:2rem 1rem;
+}
+.topbar{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem}
+.topbar-logo{width:48px;height:48px;border-radius:14px;background:#1a56c4;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;}
+.topbar-name{font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;color:#1a3a6e;}
+.topbar-name span{color:#f59e0b}
+.shell{display:flex;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(26,86,196,0.15);width:100%;max-width:960px;min-height:560px;}
+.illus{flex:1;background:linear-gradient(155deg,#1a56c4 0%,#2f80ed 60%,#56b4fa 100%);padding:2.5rem 2rem 0;display:flex;flex-direction:column;justify-content:space-between;}
+.illus-title{font-family:'Nunito',sans-serif;font-size:28px;font-weight:800;color:#fff;}
+.illus-title span{color:#fbbf24}
+.illus-sub{font-size:14px;color:rgba(255,255,255,0.8);margin-top:10px;}
+.form-panel{width:400px;padding:2.5rem;}
+.role-toggle{display:flex;gap:12px;margin-bottom:2rem}
+.role-btn{flex:1;padding:14px;border-radius:14px;font-weight:700;cursor:pointer;border:2px solid #e5e7eb;background:#f9fbff;}
+.role-btn.active-user{background:#1a56c4;color:#fff;}
+.role-btn.active-admin{background:#6d28d9;color:#fff;}
+.area{display:none}
+.area.active{display:block}
+.field{margin-bottom:1rem}
+.field input{width:100%;padding:11px;border-radius:10px;border:1.5px solid #e5e7eb;}
+.btn{width:100%;padding:12px;border-radius:12px;font-weight:700;border:none;cursor:pointer;}
+.btn-user{background:#1a56c4;color:#fff}
+.btn-admin{background:#6d28d9;color:#fff}
+.toast{
+  position:fixed;top:20px;right:20px;
+  padding:12px 18px;border-radius:12px;
+  font-size:14px;font-weight:600;
+  box-shadow:0 8px 24px rgba(0,0,0,0.15);
+  z-index:9999;opacity:0;transform:translateY(-10px);
+  transition:all .3s;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.error{background:#fee2e2;color:#b91c1c;}
+.toast.success{background:#dcfce7;color:#166534;}
+</style>
+</head>
+
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="topbar">
+  <div class="topbar-logo">⛽</div>
+  <div class="topbar-name">Fuel<span>Go</span></div>
+</div>
+
+<div class="shell">
+
+  <div class="illus">
+    <div>
+      <div class="illus-title">Fuel delivered to your <span>doorstep</span></div>
+      <div class="illus-sub">On-demand fuel delivery anytime.</div>
+    </div>
+  </div>
+
+  <div class="form-panel">
+
+    <div class="role-toggle">
+      <button class="role-btn active-user" id="btn-user" onclick="setRole('user')">User</button>
+      <button class="role-btn" id="btn-admin" onclick="setRole('admin')">Admin</button>
+    </div>
+
+    <!-- USER -->
+    <div class="area active" id="user-area">
+      <div class="field">
+        <input type="email" id="user-email" placeholder="Email"/>
+      </div>
+      <div class="field">
+        <input type="password" id="user-password" placeholder="Password"/>
+      </div>
+      <button class="btn btn-user" onclick="loginUser()">Login</button>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="area" id="admin-area">
+      <div class="field">
+        <input type="email" id="admin-email" placeholder="Admin Email"/>
+      </div>
+      <div class="field">
+        <input type="password" id="admin-password" placeholder="Password"/>
+      </div>
+      <button class="btn btn-admin" onclick="loginAdmin()">Admin Login</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function showToast(msg, type = 'error') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+function setRole(role) {
+  const isUser = role === 'user';
+  document.getElementById('btn-user').className = 'role-btn' + (isUser ? ' active-user' : '');
+  document.getElementById('btn-admin').className = 'role-btn' + (!isUser ? ' active-admin' : '');
+  document.getElementById('user-area').className = 'area' + (isUser ? ' active' : '');
+  document.getElementById('admin-area').className = 'area' + (!isUser ? ' active' : '');
+}
+
+// ✅ USER LOGIN
+async function loginUser() {
+  const email = document.getElementById('user-email').value;
+  const password = document.getElementById('user-password').value;
+
+  try {
+    const res = await fetch('/api/auth/login',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password})
+    });
+
+    const data = await res.json();
+
+    if(res.ok){
+      // ✅ Save token
+      localStorage.setItem("userToken", data.token);
+
+      showToast("User login success","success");
+
+      // ✅ Redirect
+      setTimeout(()=>{
+        window.location.href = "dashboard.html";
+      },1000);
+
+    }else{
+      showToast(data.message || "Login failed");
+    }
+
+  } catch (err) {
+    showToast("Server error");
+  }
+}
+
+// ✅ ADMIN LOGIN
+async function loginAdmin() {
+  const email = document.getElementById('admin-email').value;
+  const password = document.getElementById('admin-password').value;
+
+  try {
+    const res = await fetch('/api/admin/login',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password})
+    });
+
+    const data = await res.json();
+
+    if(res.ok){
+      localStorage.setItem("adminToken", data.token);
+
+      showToast("Admin login success","success");
+
+      setTimeout(()=>{
+        window.location.href = "admin.html";
+      },1000);
+
+    }else{
+      showToast(data.message || "Login failed");
+    }
+
+  } catch (err) {
+    showToast("Server error");
+  }
+}
+</script>
+
+</body>
+</html>
