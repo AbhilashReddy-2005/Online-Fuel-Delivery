@@ -10,6 +10,7 @@ const connectDB = require("./config/db");
 // ================= IMPORT ONLY DAY 2 ROUTES =================
 const authRoutes = require("./routes/authRoutes");
 const emailOtpRoutes = require("./routes/emailOtpRoutes");
+const customerRoutes = require("./routes/customerRoutes");
 
 const app = express();
 
@@ -26,6 +27,10 @@ console.log("══════════════════════�
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/api/auth", authRoutes);
+app.use("/api/otp", emailOtpRoutes);
+app.use("/api/customers", customerRoutes);
 
 app.use((req, res, next) => {
     console.log("\n📡 INCOMING REQUEST");
