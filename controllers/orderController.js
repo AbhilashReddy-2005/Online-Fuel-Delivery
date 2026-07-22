@@ -1,7 +1,3 @@
-// ─────────────────────────────────────────────
-//  orderController.js
-//  Place at: controllers/orderController.js
-// ─────────────────────────────────────────────
 
 const Order = require("../models/Order");
 

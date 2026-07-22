@@ -11,8 +11,12 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const emailOtpRoutes = require("./routes/emailOtpRoutes");
 const customerRoutes = require("./routes/customerRoutes");
-
+app.use("/api/auth", authRoutes);
+app.use("/api/otp", emailOtpRoutes);
+app.use("/api/customers", customerRoutes);
+app.use("/api/orders", orderRoutes);
 const app = express();
+
 
 // ================= DATABASE =================
 connectDB();
