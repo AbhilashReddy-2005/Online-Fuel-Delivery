@@ -17,7 +17,6 @@ res.json(payment);
 const axios = require("axios");
 const crypto = require("crypto");
 
-// ================= EASEBUZZ PAYMENT =================
 exports.initiateEasebuzzPayment = async (req, res) => {
   try {
     const { amount, orderId } = req.body;

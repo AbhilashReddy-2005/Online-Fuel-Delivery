@@ -94,9 +94,7 @@ async function confirmPayment(orderId) {
     console.error(err);
   }
 }
-// ─────────────────────────────────────────
-// Manual payment confirmation button
-// ─────────────────────────────────────────
+
 async function manualPaymentDone() {
 
   const orderId = document.getElementById("orderId").value;
